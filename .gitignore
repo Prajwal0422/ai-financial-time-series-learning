@@ -1,0 +1,6 @@
+# Allow markdown files even if globally ignored
+!*.md
+
+# Python junk
+__pycache__/
+.ipynb_checkpoints/
