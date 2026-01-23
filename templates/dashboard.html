@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stock Data Summary</h1>
+        </header>
+        
+        <main>
+            <section class="summary-grid">
+                <div class="summary-card">
+                    <h3>Start Date</h3>
+                    <p>{{ summary.start_date }}</p>
+                </div>
+                <div class="summary-card">
+                    <h3>End Date</h3>
+                    <p>{{ summary.end_date }}</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Days</h3>
+                    <p>{{ summary.total_days }}</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Average Close Price</h3>
+                    <p>${{ summary.avg_close }}</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Highest Close Price</h3>
+                    <p>${{ summary.max_close }}</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Lowest Close Price</h3>
+                    <p>${{ summary.min_close }}</p>
+                </div>
+            </section>
+            
+            <div class="nav-link">
+                <a href="/">← Back to Home</a>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2026 Financial Time-Series Pattern Analysis</p>
+        </footer>
+    </div>
+</body>
+</html>
