@@ -40,6 +40,33 @@
                 </div>
             </section>
             
+            <section class="advanced-section">
+                <h2>Advanced Return & Trend Signals</h2>
+                
+                <div class="signals-grid">
+                    <div class="signal-card">
+                        <h3>Latest Simple Return</h3>
+                        <p class="{% if simple_return > 0 %}positive{% else %}negative{% endif %}">
+                            {{ simple_return }}%
+                        </p>
+                    </div>
+                    <div class="signal-card">
+                        <h3>Latest Log Return</h3>
+                        <p class="{% if log_return > 0 %}positive{% else %}negative{% endif %}">
+                            {{ log_return }}%
+                        </p>
+                    </div>
+                    <div class="signal-card">
+                        <h3>Rolling Volatility</h3>
+                        <p>{{ volatility }}%</p>
+                    </div>
+                    <div class="signal-card trend-card">
+                        <h3>Trend Classification</h3>
+                        <p class="trend-{{ trend.replace(' ', '-').lower() }}">{{ trend }}</p>
+                    </div>
+                </div>
+            </section>
+            
             <div class="nav-link">
                 <a href="/">← Back to Home</a>
             </div>
