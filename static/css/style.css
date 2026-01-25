@@ -152,3 +152,102 @@ footer {
     color: #2c3e50;
     font-weight: 600;
 }
+
+
+.advanced-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e0e0e0;
+}
+
+.advanced-section h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.signals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.signal-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.signal-card h3 {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+
+.signal-card p {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.positive {
+    color: #4caf50;
+}
+
+.negative {
+    color: #f44336;
+}
+
+.trend-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    grid-column: span 1;
+}
+
+.trend-strong-uptrend {
+    color: #4caf50;
+    font-weight: 700;
+}
+
+.trend-strong-downtrend {
+    color: #f44336;
+    font-weight: 700;
+}
+
+.trend-sideways-\/-uncertain {
+    color: #ff9800;
+    font-weight: 700;
+}
+
+
+.regime-section {
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.regime-section h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.regime-section p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.regime-high-volatility-regime {
+    color: #f44336;
+    font-weight: 700;
+}
+
+.regime-low-volatility-regime {
+    color: #4caf50;
+    font-weight: 700;
+}

@@ -3,83 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Financial Time-Series Pattern Analysis - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Stock Data Summary</h1>
-        </header>
-        
-        <main>
-            <section class="summary-grid">
-                <div class="summary-card">
-                    <h3>Start Date</h3>
-                    <p>{{ summary.start_date }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>End Date</h3>
-                    <p>{{ summary.end_date }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Total Days</h3>
-                    <p>{{ summary.total_days }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Average Close Price</h3>
-                    <p>${{ summary.avg_close }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Highest Close Price</h3>
-                    <p>${{ summary.max_close }}</p>
-                </div>
-                <div class="summary-card">
-                    <h3>Lowest Close Price</h3>
-                    <p>${{ summary.min_close }}</p>
-                </div>
-            </section>
-            
-            <section class="advanced-section">
-                <h2>Advanced Return & Trend Signals</h2>
-                
-                <div class="signals-grid">
-                    <div class="signal-card">
-                        <h3>Latest Simple Return</h3>
-                        <p class="{% if simple_return > 0 %}positive{% else %}negative{% endif %}">
-                            {{ simple_return }}%
-                        </p>
-                    </div>
-                    <div class="signal-card">
-                        <h3>Latest Log Return</h3>
-                        <p class="{% if log_return > 0 %}positive{% else %}negative{% endif %}">
-                            {{ log_return }}%
-                        </p>
-                    </div>
-                    <div class="signal-card">
-                        <h3>Rolling Volatility</h3>
-                        <p>{{ volatility }}%</p>
-                    </div>
-                    <div class="signal-card trend-card">
-                        <h3>Trend Classification</h3>
-                        <p class="trend-{{ trend.replace(' ', '-').lower() }}">{{ trend }}</p>
-                    </div>
-                </div>
-                
-                <div class="regime-section">
-                    <h3>Market Regime</h3>
-                    <p><b>Volatility Regime:</b> <span class="regime-{{ volatility_regime.replace(' ', '-').lower() }}">{{ volatility_regime }}</span></p>
-                </div>
-            </section>
-            
-            <div class="nav-link">
-                <a href="/">← Back to Home</a>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Financial Time-Series Pattern Analysis</h1>
+                <p class="subtitle">Exploratory analysis of market behavior using data science</p>
             </div>
-        </main>
-        
-        <footer>
-            <p>&copy; 2026 Financial Time-Series Pattern Analysis</p>
+            <div class="dataset-selector">
+                <label for="dataset-select">Dataset:</label>
+                <select id="dataset-select" onchange="changeDataset()">
+                    {% for dataset in available_datasets %}
+                    <option value="{{ dataset }}" {% if dataset == current_dataset %}selected{% endif %}>
+                        {{ dataset.replace('.csv', '').replace('_', ' ').title() }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </header>
+
+        <!-- Summary Cards Section -->
+        <section class="summary-cards">
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <div class="card-content">
+                    <h3>Date Range</h3>
+                    <p class="card-value">{{ summary.start_date }} → {{ summary.end_date }}</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <div class="card-content">
+                    <h3>Total Observations</h3>
+                    <p class="card-value">{{ summary.total_days }} days</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">💰</div>
+                <div class="card-content">
+                    <h3>Average Close Price</h3>
+                    <p class="card-value">${{ summary.avg_close }}</p>
+                </div>
+            </div>
+            
+            <div class="card {% if 'High' in volatility_regime %}card-warning{% else %}card-success{% endif %}">
+                <div class="card-icon">📈</div>
+                <div class="card-content">
+                    <h3>Volatility Regime</h3>
+                    <p class="card-value">{{ volatility_regime.replace(' Regime', '') }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analysis Insights Section -->
+        <section class="analysis-section">
+            <h2 class="section-title">Analysis Insights</h2>
+            
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h4>Latest Simple Return</h4>
+                    <p class="insight-value {% if simple_return > 0 %}positive{% else %}negative{% endif %}">
+                        {{ simple_return }}%
+                    </p>
+                    <span class="insight-label">Day-over-day change</span>
+                </div>
+                
+                <div class="insight-card">
+                    <h4>Latest Log Return</h4>
+                    <p class="insight-value {% if log_return > 0 %}positive{% else %}negative{% endif %}">
+                        {{ log_return }}%
+                    </p>
+                    <span class="insight-label">Logarithmic return</span>
+                </div>
+                
+                <div class="insight-card">
+                    <h4>Rolling Volatility</h4>
+                    <p class="insight-value">{{ volatility }}%</p>
+                    <span class="insight-label">3-day window</span>
+                </div>
+                
+                <div class="insight-card trend-card">
+                    <h4>Detected Trend</h4>
+                    <p class="insight-value trend-{{ trend.replace(' ', '-').lower() }}">
+                        {{ trend }}
+                    </p>
+                    <span class="insight-label">Multi-signal analysis</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Table Section -->
+        <section class="data-table-section">
+            <h2 class="section-title">Recent Data (Last 10 Observations)</h2>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Close Price</th>
+                            <th>Return (%)</th>
+                            <th>Volatility (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_data %}
+                        <tr>
+                            <td>{{ row.Date }}</td>
+                            <td>${{ row.Close }}</td>
+                            <td class="{% if row.Simple_Return > 0 %}positive{% elif row.Simple_Return < 0 %}negative{% endif %}">
+                                {{ row.Simple_Return if row.Simple_Return == row.Simple_Return else 'N/A' }}
+                            </td>
+                            <td>{{ row.Rolling_Volatility if row.Rolling_Volatility == row.Rolling_Volatility else 'N/A' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Explanation Panel Section -->
+        <section class="explanation-section">
+            <h2 class="section-title">Understanding the Metrics</h2>
+            
+            <div class="explanation-grid">
+                <div class="explanation-card">
+                    <h4>📉 Returns</h4>
+                    <p>
+                        Returns measure the percentage change in price over time. 
+                        <strong>Simple returns</strong> show direct percentage changes, while 
+                        <strong>log returns</strong> are mathematically additive and preferred in quantitative finance 
+                        for statistical analysis.
+                    </p>
+                </div>
+                
+                <div class="explanation-card">
+                    <h4>📊 Volatility</h4>
+                    <p>
+                        Volatility represents the degree of price variation over time. 
+                        Higher volatility indicates larger price swings and greater uncertainty. 
+                        We use <strong>rolling windows</strong> to capture recent market behavior 
+                        rather than historical averages.
+                    </p>
+                </div>
+                
+                <div class="explanation-card">
+                    <h4>⚠️ No Predictions</h4>
+                    <p>
+                        This application performs <strong>descriptive analysis only</strong>. 
+                        It identifies patterns and calculates statistical metrics from historical data. 
+                        It does not predict future prices, recommend trades, or provide investment advice.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p><a href="/">← Back to Home</a></p>
+            <p>&copy; 2026 Financial Time-Series Pattern Analysis | Educational Purpose Only</p>
         </footer>
     </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
