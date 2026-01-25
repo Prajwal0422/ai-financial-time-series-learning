@@ -3,6 +3,7 @@ from analysis.data_loader import load_stock_data
 from analysis.summary import get_stock_summary
 from analysis.returns import calculate_returns
 from analysis.trends import detect_trend_advanced
+from analysis.regimes import detect_volatility_regime
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ def dashboard():
     
     summary = get_stock_summary(df)
     trend = detect_trend_advanced(df)
+    volatility_regime = detect_volatility_regime(df)
     
     latest_simple_return = round(df["Simple_Return"].iloc[-1] * 100, 2)
     latest_log_return = round(df["Log_Return"].iloc[-1] * 100, 2)
@@ -28,7 +30,8 @@ def dashboard():
         trend=trend,
         simple_return=latest_simple_return,
         log_return=latest_log_return,
-        volatility=latest_volatility
+        volatility=latest_volatility,
+        volatility_regime=volatility_regime
     )
 
 if __name__ == "__main__":
