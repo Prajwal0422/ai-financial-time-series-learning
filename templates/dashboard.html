@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Time-Series Pattern Analysis - Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -94,6 +95,24 @@
                         {{ trend }}
                     </p>
                     <span class="insight-label">Multi-signal analysis</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <h2 class="section-title">Visual Analysis</h2>
+            
+            <div class="chart-container">
+                <div id="priceChart" class="chart-box"></div>
+            </div>
+            
+            <div class="charts-row">
+                <div class="chart-container half">
+                    <div id="returnsChart" class="chart-box"></div>
+                </div>
+                <div class="chart-container half">
+                    <div id="volChart" class="chart-box"></div>
                 </div>
             </div>
         </section>

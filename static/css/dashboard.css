@@ -332,3 +332,39 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Charts Section */
+.charts-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.chart-container {
+    margin-bottom: 20px;
+}
+
+.chart-box {
+    height: 380px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.charts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+}
+
+.chart-container.half .chart-box {
+    height: 280px;
+}
+
+@media (max-width: 768px) {
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+}

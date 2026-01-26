@@ -54,5 +54,22 @@ def dashboard():
         current_dataset=dataset
     )
 
+@app.route("/api/chart-data")
+def chart_data():
+    dataset = request.args.get("dataset", "stock_1.csv")
+    csv_path = os.path.join("data", dataset)
+    df = load_stock_data(csv_path)
+    df = calculate_returns(df)
+    
+    payload = {
+        "dates": df["Date"].dt.strftime("%Y-%m-%d").tolist(),
+        "close": df["Close"].tolist(),
+        "ma_short": df["Close"].rolling(3).mean().fillna(None).tolist(),
+        "ma_long": df["Close"].rolling(5).mean().fillna(None).tolist(),
+        "returns": (df["Simple_Return"] * 100).fillna(0).tolist(),
+        "volatility": (df["Rolling_Volatility"] * 100).fillna(0).tolist(),
+    }
+    return jsonify(payload)
+
 if __name__ == "__main__":
     app.run(debug=True)
