@@ -103,6 +103,22 @@
         <section class="charts-section">
             <h2 class="section-title">Visual Analysis</h2>
             
+            <div class="static-charts">
+                <div class="static-chart-container">
+                    <img src="{{ url_for('static', filename='charts/price_ma.png') }}" alt="Price with Moving Averages" class="chart-image">
+                </div>
+                
+                <div class="static-chart-container">
+                    <img src="{{ url_for('static', filename='charts/returns.png') }}" alt="Daily Returns" class="chart-image">
+                </div>
+                
+                <div class="static-chart-container">
+                    <img src="{{ url_for('static', filename='charts/volatility.png') }}" alt="Rolling Volatility" class="chart-image">
+                </div>
+            </div>
+            
+            <h3 class="subsection-title">Interactive Charts (Plotly)</h3>
+            
             <div class="chart-container">
                 <div id="priceChart" class="chart-box"></div>
             </div>

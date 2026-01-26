@@ -4,6 +4,7 @@ from analysis.summary import get_stock_summary
 from analysis.returns import calculate_returns
 from analysis.trends import detect_trend_advanced
 from analysis.regimes import detect_volatility_regime
+from analysis.charts import generate_charts
 import os
 
 app = Flask(__name__)
@@ -24,6 +25,9 @@ def dashboard():
     csv_path = os.path.join("data", dataset)
     df = load_stock_data(csv_path)
     df = calculate_returns(df)
+    
+    # Generate static charts
+    generate_charts(df)
     
     # Calculate metrics
     summary = get_stock_summary(df)
