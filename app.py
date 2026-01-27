@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request, jsonify
 from analysis.data_loader import load_stock_data, get_available_datasets
 from analysis.summary import get_stock_summary
-from analysis.returns import calculate_returns
+from analysis.features import build_features
 from analysis.trends import detect_trend_advanced
 from analysis.regimes import detect_volatility_regime
 from analysis.clustering import cluster_market_regimes
 from analysis.charts import generate_regime_chart
 from analysis.regime_labels import interpret_regimes
+from analysis.logger import log_event
+from config import DATA_DIR, TABLE_ROWS
 import os
 
 app = Flask(__name__)
@@ -20,15 +22,21 @@ def dashboard():
     # Get selected dataset from query parameter, default to stock_1.csv
     dataset = request.args.get("dataset", "stock_1.csv")
     
+    # Log the analysis run
+    log_event(f"Dashboard loaded with dataset: {dataset}")
+    
     # Get list of available datasets
     available_datasets = get_available_datasets()
     
-    # Load and process data
-    csv_path = os.path.join("data", dataset)
+    # Load and process data using feature pipeline
+    csv_path = os.path.join(DATA_DIR, dataset)
     df = load_stock_data(csv_path)
-    df = calculate_returns(df)
-    df = cluster_market_regimes(df, n_clusters=3)
+    df = build_features(df)
+    df = cluster_market_regimes(df)
     generate_regime_chart(df)
+    
+    # Log clustering completion
+    log_event(f"Clustering completed with {df['Regime'].nunique()} regimes")
     
     # Calculate metrics
     summary = get_stock_summary(df)
@@ -40,8 +48,8 @@ def dashboard():
     latest_log_return = round(df["Log_Return"].iloc[-1] * 100, 2)
     latest_volatility = round(df["Rolling_Volatility"].iloc[-1] * 100, 2)
     
-    # Get last 10 rows for table display
-    table_data = df.tail(10)[["Date", "Close", "Simple_Return", "Rolling_Volatility"]].copy()
+    # Get last N rows for table display (using config)
+    table_data = df.tail(TABLE_ROWS)[["Date", "Close", "Simple_Return", "Rolling_Volatility"]].copy()
     table_data["Date"] = table_data["Date"].dt.strftime("%Y-%m-%d")
     table_data["Simple_Return"] = (table_data["Simple_Return"] * 100).round(2)
     table_data["Rolling_Volatility"] = (table_data["Rolling_Volatility"] * 100).round(2)
@@ -64,9 +72,9 @@ def dashboard():
 @app.route("/api/chart-data")
 def chart_data():
     dataset = request.args.get("dataset", "stock_1.csv")
-    csv_path = os.path.join("data", dataset)
+    csv_path = os.path.join(DATA_DIR, dataset)
     df = load_stock_data(csv_path)
-    df = calculate_returns(df)
+    df = build_features(df)
     
     payload = {
         "dates": df["Date"].dt.strftime("%Y-%m-%d").tolist(),
@@ -79,4 +87,5 @@ def chart_data():
     return jsonify(payload)
 
 if __name__ == "__main__":
+    log_event("Flask application started")
     app.run(debug=True)

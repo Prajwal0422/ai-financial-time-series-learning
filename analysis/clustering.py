@@ -1,7 +1,8 @@
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from config import N_CLUSTERS, RANDOM_STATE
 
-def cluster_market_regimes(df, n_clusters=3):
+def cluster_market_regimes(df, n_clusters=N_CLUSTERS):
     """
     Cluster trading days into market regimes using unsupervised learning.
     
@@ -9,7 +10,7 @@ def cluster_market_regimes(df, n_clusters=3):
     - Log_Return captures direction & magnitude of movement
     - Rolling_Volatility captures uncertainty / risk
     
-    n_clusters=3 chosen for interpretability on small datasets
+    n_clusters chosen for interpretability on small datasets
     (typical regimes: stable, volatile, declining)
     """
     df = df.copy()
@@ -23,7 +24,7 @@ def cluster_market_regimes(df, n_clusters=3):
     X = scaler.fit_transform(features.values)
     
     # KMeans clustering - no labels, no prediction, pure pattern discovery
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+    kmeans = KMeans(n_clusters=n_clusters, random_state=RANDOM_STATE, n_init=10)
     labels = kmeans.fit_predict(X)
     
     # Align labels back to df index

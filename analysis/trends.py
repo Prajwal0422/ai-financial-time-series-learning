@@ -1,8 +1,10 @@
+from config import SHORT_MA_WINDOW, LONG_MA_WINDOW
+
 def detect_trend_advanced(df):
     df = df.copy()
     
-    short_ma = df["Close"].rolling(window=3).mean()
-    long_ma = df["Close"].rolling(window=5).mean()
+    short_ma = df["Close"].rolling(window=SHORT_MA_WINDOW).mean()
+    long_ma = df["Close"].rolling(window=LONG_MA_WINDOW).mean()
     
     trend_score = 0
     

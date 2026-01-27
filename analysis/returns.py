@@ -1,4 +1,5 @@
 import numpy as np
+from config import VOLATILITY_WINDOW, RETURN_WINDOW
 
 def calculate_returns(df):
     df = df.copy()
@@ -9,8 +10,8 @@ def calculate_returns(df):
     # Log returns (used in quantitative finance)
     df["Log_Return"] = np.log(df["Close"] / df["Close"].shift(1))
     
-    # Rolling statistics
-    df["Rolling_Mean_Return"] = df["Log_Return"].rolling(window=3).mean()
-    df["Rolling_Volatility"] = df["Log_Return"].rolling(window=3).std()
+    # Rolling statistics (using config values)
+    df["Rolling_Mean_Return"] = df["Log_Return"].rolling(window=RETURN_WINDOW).mean()
+    df["Rolling_Volatility"] = df["Log_Return"].rolling(window=VOLATILITY_WINDOW).std()
     
     return df

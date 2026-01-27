@@ -2,9 +2,10 @@ import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import os
+from config import CHARTS_DIR
 
 def generate_regime_chart(df):
-    os.makedirs("static/charts", exist_ok=True)
+    os.makedirs(CHARTS_DIR, exist_ok=True)
     
     plt.figure(figsize=(10, 5))
     
@@ -25,5 +26,5 @@ def generate_regime_chart(df):
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig("static/charts/regimes.png", dpi=100)
+    plt.savefig(os.path.join(CHARTS_DIR, "regimes.png"), dpi=100)
     plt.close()
