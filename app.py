@@ -4,7 +4,9 @@ from analysis.summary import get_stock_summary
 from analysis.returns import calculate_returns
 from analysis.trends import detect_trend_advanced
 from analysis.regimes import detect_volatility_regime
-from analysis.charts import generate_charts
+from analysis.clustering import cluster_market_regimes
+from analysis.charts import generate_regime_chart
+from analysis.regime_labels import interpret_regimes
 import os
 
 app = Flask(__name__)
@@ -25,14 +27,14 @@ def dashboard():
     csv_path = os.path.join("data", dataset)
     df = load_stock_data(csv_path)
     df = calculate_returns(df)
-    
-    # Generate static charts
-    generate_charts(df)
+    df = cluster_market_regimes(df, n_clusters=3)
+    generate_regime_chart(df)
     
     # Calculate metrics
     summary = get_stock_summary(df)
     trend = detect_trend_advanced(df)
     volatility_regime = detect_volatility_regime(df)
+    regime_summary = interpret_regimes(df)
     
     latest_simple_return = round(df["Simple_Return"].iloc[-1] * 100, 2)
     latest_log_return = round(df["Log_Return"].iloc[-1] * 100, 2)
@@ -53,6 +55,7 @@ def dashboard():
         log_return=latest_log_return,
         volatility=latest_volatility,
         volatility_regime=volatility_regime,
+        regime_summary=regime_summary,
         table_data=table_data,
         available_datasets=available_datasets,
         current_dataset=dataset

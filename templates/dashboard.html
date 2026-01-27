@@ -163,6 +163,48 @@
             </div>
         </section>
 
+        <!-- Market Regime Discovery Section -->
+        <section class="regime-discovery-section">
+            <h2 class="section-title">Market Regime Discovery (Unsupervised ML)</h2>
+            <div class="chart-container">
+                <img src="{{ url_for('static', filename='charts/regimes.png') }}?v={{ range(1000) | random }}" alt="Market Regimes Chart" class="regime-chart">
+            </div>
+            <div class="regime-explanation">
+                <p>
+                    <strong>What are market regimes?</strong> Periods where market behavior (returns + volatility) 
+                    exhibits similar patterns. Using K-Means clustering on standardized features, we identify 
+                    distinct behavioral states without predefined labels — a core unsupervised learning technique.
+                </p>
+            </div>
+            
+            <!-- Regime Interpretation -->
+            <div class="regime-interpretation">
+                <h3>Market Regime Interpretation</h3>
+                <div class="regime-cards">
+                    {% for k, v in regime_summary.items() %}
+                    <div class="regime-card">
+                        <div class="regime-header">
+                            <span class="regime-number">Regime {{ k }}</span>
+                            <span class="regime-label">{{ v.label }}</span>
+                        </div>
+                        <div class="regime-stats">
+                            <div class="stat">
+                                <span class="stat-label">Avg Return</span>
+                                <span class="stat-value {% if v.avg_return > 0 %}positive{% else %}negative{% endif %}">
+                                    {{ v.avg_return }}%
+                                </span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Avg Volatility</span>
+                                <span class="stat-value">{{ v.avg_volatility }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
         <!-- Explanation Panel Section -->
         <section class="explanation-section">
             <h2 class="section-title">Understanding the Metrics</h2>
