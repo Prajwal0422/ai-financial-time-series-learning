@@ -3,29 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Financial Time-Series Pattern Analysis</title>
+    <title>AI Financial Pattern Analysis Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 <body>
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <h1>AI Financial Time-Series Pattern Analysis</h1>
-                <p class="nav-subtitle">Exploratory analysis of market behavior using data science</p>
-            </div>
-            <div class="nav-links">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/dashboard" class="nav-link active">Dashboard</a>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Dataset Selector Bar -->
+    <!-- Hero / Header Section -->
+    <header class="hero-header container">
+        <h1>AI Financial Time-Series Pattern Analysis</h1>
+        <p>Exploratory market behavior analysis using data science and unsupervised learning.</p>
+    </header>
+
+    <!-- Dataset Selector -->
     <div class="dataset-bar">
-        <div class="container">
-            <label for="dataset-select" class="dataset-label">Select Dataset:</label>
-            <select id="dataset-select" class="dataset-select" onchange="changeDataset()">
+        <div class="container dataset-container">
+            <label for="dataset-select" class="dataset-label">Analysis Context:</label>
+            <select id="dataset-select" class="dataset-select">
                 {% for dataset in available_datasets %}
                 <option value="{{ dataset }}" {% if dataset == current_dataset %}selected{% endif %}>
                     {{ dataset.replace('.csv', '').replace('_', ' ').title() }}
@@ -35,271 +31,161 @@
         </div>
     </div>
 
-    <!-- Main Dashboard Container -->
-    <main class="dashboard-main">
-        <div class="container">
+    <main class="container">
+        
+        <!-- KPI Summary Section -->
+        <div class="section-header">
+            <h2 class="section-title">Statistical Summary</h2>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Date Range</div>
+                <div class="kpi-value">{{ summary.start_date }}</div>
+                <div class="kpi-subvalue">to {{ summary.end_date }}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Observations</div>
+                <div class="kpi-value">{{ summary.total_days }}</div>
+                <div class="kpi-subvalue">Trading days analyzed</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Close</div>
+                <div class="kpi-value">${{ summary.avg_close }}</div>
+                <div class="kpi-subvalue">Historical mean</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Volatility Regime</div>
+                <div class="kpi-value">{{ volatility_regime.replace(' Volatility Regime', '') }}</div>
+                <div class="kpi-subvalue">Recent behavior</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Market Trend</div>
+                <div class="kpi-value">{{ trend }}</div>
+                <div class="kpi-subvalue">Signal detection</div>
+            </div>
+        </div>
+
+        <!-- Visual Analysis Section -->
+        <div class="section-header">
+            <h2 class="section-title">Visual Behavior Analysis</h2>
+        </div>
+        <div class="charts-grid">
             
-            <!-- KPI Summary Section -->
-            <section class="kpi-section">
-                <h2 class="section-title">Key Metrics Overview</h2>
-                <div class="kpi-grid">
-                    
-                    <div class="kpi-card">
-                        <div class="kpi-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                            </svg>
-                        </div>
-                        <div class="kpi-content">
-                            <h3 class="kpi-label">Date Range</h3>
-                            <p class="kpi-value">{{ summary.start_date }}</p>
-                            <p class="kpi-subvalue">to {{ summary.end_date }}</p>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card">
-                        <div class="kpi-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="20" x2="12" y2="10"></line>
-                                <line x1="18" y1="20" x2="18" y2="4"></line>
-                                <line x1="6" y1="20" x2="6" y2="16"></line>
-                            </svg>
-                        </div>
-                        <div class="kpi-content">
-                            <h3 class="kpi-label">Total Observations</h3>
-                            <p class="kpi-value">{{ summary.total_days }}</p>
-                            <p class="kpi-subvalue">trading days</p>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card">
-                        <div class="kpi-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                        </div>
-                        <div class="kpi-content">
-                            <h3 class="kpi-label">Average Close Price</h3>
-                            <p class="kpi-value">${{ summary.avg_close }}</p>
-                            <p class="kpi-subvalue">mean value</p>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card {% if 'High' in volatility_regime %}kpi-warning{% else %}kpi-success{% endif %}">
-                        <div class="kpi-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                        </div>
-                        <div class="kpi-content">
-                            <h3 class="kpi-label">Volatility Regime</h3>
-                            <p class="kpi-value">{{ volatility_regime.replace(' Volatility Regime', '') }}</p>
-                            <p class="kpi-subvalue">current state</p>
-                        </div>
-                    </div>
-
-                    <div class="kpi-card kpi-trend">
-                        <div class="kpi-icon">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                <polyline points="17 6 23 6 23 12"></polyline>
-                            </svg>
-                        </div>
-                        <div class="kpi-content">
-                            <h3 class="kpi-label">Detected Trend</h3>
-                            <p class="kpi-value trend-{{ trend.replace(' ', '-').lower() }}">{{ trend }}</p>
-                            <p class="kpi-subvalue">multi-signal analysis</p>
-                        </div>
-                    </div>
-
+            <!-- Price & MA Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Price & Structural Trend</h3>
                 </div>
-            </section>
-
-            <!-- Returns & Volatility Metrics -->
-            <section class="metrics-section">
-                <h2 class="section-title">Latest Statistical Metrics</h2>
-                <div class="metrics-grid">
-                    
-                    <div class="metric-card">
-                        <h4 class="metric-title">Simple Return</h4>
-                        <p class="metric-value {% if simple_return > 0 %}positive{% elif simple_return < 0 %}negative{% endif %}">
-                            {{ simple_return }}%
-                        </p>
-                        <p class="metric-description">Day-over-day percentage change</p>
-                    </div>
-
-                    <div class="metric-card">
-                        <h4 class="metric-title">Log Return</h4>
-                        <p class="metric-value {% if log_return > 0 %}positive{% elif log_return < 0 %}negative{% endif %}">
-                            {{ log_return }}%
-                        </p>
-                        <p class="metric-description">Logarithmic return (additive property)</p>
-                    </div>
-
-                    <div class="metric-card">
-                        <h4 class="metric-title">Rolling Volatility</h4>
-                        <p class="metric-value">{{ volatility }}%</p>
-                        <p class="metric-description">3-day standard deviation</p>
-                    </div>
-
+                <div class="chart-image-container">
+                    <img src="{{ url_for('static', filename='charts/price_ma.png') }}" alt="Price MA Chart" class="chart-image">
                 </div>
-            </section>
-
-            <!-- Visual Analysis Section -->
-            <section class="charts-section">
-                <h2 class="section-title">Visual Pattern Analysis</h2>
-                
-                <div class="chart-container">
-                    <div class="chart-wrapper">
-                        <img src="{{ url_for('static', filename='charts/regimes.png') }}?v={{ range(1000) | random }}" 
-                             alt="Market Regimes Chart" 
-                             class="chart-image">
-                        <p class="chart-caption">
-                            <strong>Market Regime Discovery:</strong> K-Means clustering identifies distinct behavioral patterns 
-                            based on returns and volatility. Each color represents a different regime with similar characteristics.
-                        </p>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- Regime Interpretation Section -->
-            <section class="regime-section">
-                <h2 class="section-title">Market Regime Interpretation</h2>
-                <p class="section-description">
-                    Unsupervised machine learning reveals behavioral patterns in the data. 
-                    Each regime represents a period where market behavior (returns + volatility) exhibits similar characteristics.
+                <p class="chart-caption">
+                    Analysis of historical price action combined with short and long-term moving averages to identify structural direction.
                 </p>
-                
-                <div class="regime-grid">
-                    {% for k, v in regime_summary.items() %}
-                    <div class="regime-card">
-                        <div class="regime-header">
-                            <span class="regime-badge">Regime {{ k }}</span>
-                            <h3 class="regime-title">{{ v.label }}</h3>
-                        </div>
-                        <div class="regime-stats">
-                            <div class="regime-stat">
-                                <span class="stat-label">Average Return</span>
-                                <span class="stat-value {% if v.avg_return > 0 %}positive{% elif v.avg_return < 0 %}negative{% endif %}">
-                                    {{ v.avg_return }}%
-                                </span>
-                            </div>
-                            <div class="regime-stat">
-                                <span class="stat-label">Average Volatility</span>
-                                <span class="stat-value">{{ v.avg_volatility }}%</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+            </div>
+
+            <!-- Returns Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Historical Returns</h3>
                 </div>
-            </section>
-
-            <!-- Data Table Section -->
-            <section class="table-section">
-                <h2 class="section-title">Recent Observations</h2>
-                <p class="section-description">Last 10 trading days with calculated metrics</p>
-                
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Close Price</th>
-                                <th>Return (%)</th>
-                                <th>Volatility (%)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in table_data %}
-                            <tr>
-                                <td class="date-cell">{{ row.Date }}</td>
-                                <td class="price-cell">${{ row.Close }}</td>
-                                <td class="{% if row.Simple_Return > 0 %}positive{% elif row.Simple_Return < 0 %}negative{% endif %}">
-                                    {{ row.Simple_Return if row.Simple_Return == row.Simple_Return else '—' }}
-                                </td>
-                                <td>{{ row.Rolling_Volatility if row.Rolling_Volatility == row.Rolling_Volatility else '—' }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="chart-image-container">
+                    <img src="{{ url_for('static', filename='charts/returns.png') }}" alt="Returns Chart" class="chart-image">
                 </div>
-            </section>
+                <p class="chart-caption">
+                    Day-over-day percentage changes (simple returns) visualized as a distribution of historical price velocity.
+                </p>
+            </div>
 
-            <!-- Interpretation Panel -->
-            <section class="interpretation-section">
-                <h2 class="section-title">Understanding the Analysis</h2>
-                
-                <div class="interpretation-grid">
-                    
-                    <div class="interpretation-card">
-                        <div class="interpretation-icon">📊</div>
-                        <h3>Returns</h3>
-                        <p>
-                            Returns measure the percentage change in price over time. 
-                            <strong>Simple returns</strong> show direct percentage changes, 
-                            while <strong>log returns</strong> are mathematically additive and 
-                            preferred in quantitative finance for statistical analysis and modeling.
-                        </p>
-                    </div>
-
-                    <div class="interpretation-card">
-                        <div class="interpretation-icon">📈</div>
-                        <h3>Volatility</h3>
-                        <p>
-                            Volatility represents the degree of price variation over time, 
-                            measured as the standard deviation of returns. Higher volatility 
-                            indicates larger price swings and greater uncertainty. We use 
-                            <strong>rolling windows</strong> to capture recent market behavior.
-                        </p>
-                    </div>
-
-                    <div class="interpretation-card">
-                        <div class="interpretation-icon">🔍</div>
-                        <h3>Market Regimes</h3>
-                        <p>
-                            Market regimes are periods where behavior (returns + volatility) 
-                            exhibits similar patterns. Using <strong>K-Means clustering</strong> 
-                            on standardized features, we identify distinct behavioral states 
-                            without predefined labels—a core unsupervised learning technique.
-                        </p>
-                    </div>
-
-                    <div class="interpretation-card interpretation-disclaimer">
-                        <div class="interpretation-icon">⚠️</div>
-                        <h3>No Predictions</h3>
-                        <p>
-                            This application performs <strong>descriptive analysis only</strong>. 
-                            It identifies patterns and calculates statistical metrics from 
-                            historical data. It does not predict future prices, recommend trades, 
-                            or provide investment advice. All analysis is retrospective.
-                        </p>
-                    </div>
-
+            <!-- Volatility Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Volatility Analysis</h3>
                 </div>
-            </section>
+                <div class="chart-image-container">
+                    <img src="{{ url_for('static', filename='charts/volatility.png') }}" alt="Volatility Chart" class="chart-image">
+                </div>
+                <p class="chart-caption">
+                    Rolling standard deviation tracking market uncertainty and the magnitude of price fluctuations over time.
+                </p>
+            </div>
+
+            <!-- Regimes Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Market Regime Clustering</h3>
+                </div>
+                <div class="chart-image-container">
+                    <img src="{{ url_for('static', filename='charts/regimes.png') }}" alt="Regimes Chart" class="chart-image">
+                </div>
+                <p class="chart-caption">
+                    Unsupervised K-Means clustering identifying distinct behavioral states by combining returns and volatility signals.
+                </p>
+            </div>
 
         </div>
+
+        <!-- Interpretation Panel -->
+        <section class="interpretation-panel">
+            <div class="container">
+                <div class="panel-grid">
+                    <div class="panel-item">
+                        <h3>Statistical Returns</h3>
+                        <p>We use <strong>logarithmic returns</strong> for modeling because they are time-additive. This allows us to treat market movements as a continuous statistical signal rather than just price points.</p>
+                    </div>
+                    <div class="panel-item">
+                        <h3>Volatility Clusters</h3>
+                        <p>Market volatility is rarely random; it often appears in <strong>clusters</strong>. Our system detects these shifts in regime to understand when the market is transitioning between stable and stressed states.</p>
+                    </div>
+                    <div class="panel-item">
+                        <h3>Pattern Recognition</h3>
+                        <p>Instead of manual chart reading, we use <strong>unsupervised ML</strong> to find clusters in high-dimensional feature space. This removes human bias from the analysis of market behavior.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Regime Summary Section -->
+        <div class="section-header">
+            <h2 class="section-title">Regime Performance Summary</h2>
+        </div>
+        <div class="regime-table-container">
+            <table class="regime-table">
+                <thead>
+                    <tr>
+                        <th>Regime ID</th>
+                        <th>Classification</th>
+                        <th>Avg. Return</th>
+                        <th>Avg. Volatility</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for k, v in regime_summary.items() %}
+                    <tr>
+                        <td><span class="regime-badge">Cluster {{ k }}</span></td>
+                        <td><strong>{{ v.label }}</strong></td>
+                        <td class="{{ 'val-pos' if v.avg_return > 0 else 'val-neg' }}">{{ v.avg_return }}%</td>
+                        <td>{{ v.avg_volatility }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </main>
 
     <!-- Footer -->
     <footer class="dashboard-footer">
         <div class="container">
-            <p class="footer-disclaimer">
-                <strong>Disclaimer:</strong> For educational and analytical purposes only. 
-                No trading or investment advice. This application does not predict future prices 
-                or recommend financial decisions.
+            <p class="disclaimer">
+                DISCLAIMER: This system is for exploratory data analysis and educational purposes only. 
+                It does not provide financial advice, trading signals, or price predictions. 
+                All analysis is based on historical data patterns.
             </p>
-            <p class="footer-info">
-                AI Financial Time-Series Pattern Analysis | Data Science Portfolio Project
-            </p>
+            <p class="footer-credits">AI Financial Time-Series Pattern Analysis System</p>
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
 </body>
 </html>

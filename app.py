@@ -5,7 +5,7 @@ from analysis.features import build_features
 from analysis.trends import detect_trend_advanced
 from analysis.regimes import detect_volatility_regime
 from analysis.clustering import cluster_market_regimes
-from analysis.charts import generate_regime_chart
+from analysis.charts import generate_charts
 from analysis.regime_labels import interpret_regimes
 from api.analysis_api import analysis_api
 from analysis.async_tasks import run_async
@@ -38,7 +38,7 @@ def dashboard():
     df = cluster_market_regimes(df)
     
     # Run heavy chart generation asynchronously to keep UI responsive
-    run_async(generate_regime_chart, df)
+    run_async(generate_charts, df)
     
     # Log the clustering experiment for DS tracking
     log_experiment(
