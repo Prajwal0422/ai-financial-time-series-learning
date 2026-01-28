@@ -4,3 +4,8 @@
 # Python junk
 __pycache__/
 .ipynb_checkpoints/
+.vscode/
+experiment.log
+__pycache__/
+*.pyc
+basics/

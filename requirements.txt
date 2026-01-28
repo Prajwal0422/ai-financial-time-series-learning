@@ -2,5 +2,13 @@ Flask==3.1.0
 pandas>=2.2.0
 numpy>=1.26.0
 scikit-learn
-matplotlib
 matplotlib>=3.8.0
+yfinance
+prophet
+tensorflow
+hmmlearn
+pandas-ta
+transformers
+plotly
+seaborn
+scipy
