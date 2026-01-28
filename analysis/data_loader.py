@@ -1,8 +1,12 @@
 import pandas as pd
 import os
+from analysis.schema import enforce_schema
 
 def load_stock_data(csv_path):
     df = pd.read_csv(csv_path)
+    
+    # Enforce data contract before processing
+    df = enforce_schema(df)
     
     # Convert Date column to datetime
     df["Date"] = pd.to_datetime(df["Date"])

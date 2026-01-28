@@ -7,11 +7,14 @@ from analysis.regimes import detect_volatility_regime
 from analysis.clustering import cluster_market_regimes
 from analysis.charts import generate_regime_chart
 from analysis.regime_labels import interpret_regimes
-from analysis.logger import log_event
-from config import DATA_DIR, TABLE_ROWS
+from api.analysis_api import analysis_api
+from analysis.async_tasks import run_async
+from analysis.logger import log_event, log_experiment
+from config import DATA_DIR, TABLE_ROWS, N_CLUSTERS
 import os
 
 app = Flask(__name__)
+app.register_blueprint(analysis_api, url_prefix="/api")
 
 @app.route("/")
 def home():
@@ -33,7 +36,16 @@ def dashboard():
     df = load_stock_data(csv_path)
     df = build_features(df)
     df = cluster_market_regimes(df)
-    generate_regime_chart(df)
+    
+    # Run heavy chart generation asynchronously to keep UI responsive
+    run_async(generate_regime_chart, df)
+    
+    # Log the clustering experiment for DS tracking
+    log_experiment(
+        name="Market Regime Discovery",
+        params=f"clusters={N_CLUSTERS}, data={dataset}",
+        notes="Automated run from dashboard"
+    )
     
     # Log clustering completion
     log_event(f"Clustering completed with {df['Regime'].nunique()} regimes")
