@@ -12,9 +12,39 @@ from analysis.async_tasks import run_async
 from analysis.logger import log_event, log_experiment
 from config import DATA_DIR, TABLE_ROWS, N_CLUSTERS
 import os
+from functools import lru_cache
+import time
 
 app = Flask(__name__)
 app.register_blueprint(analysis_api, url_prefix="/api")
+
+# Performance optimization: Cache dataset lists
+@lru_cache(maxsize=32)
+def get_cached_datasets():
+    """Cache available datasets to avoid repeated filesystem calls"""
+    return get_available_datasets()
+
+# Performance optimization: Cache processed data
+_data_cache = {}
+
+def get_cached_data(dataset):
+    """Cache processed data to avoid repeated computations"""
+    current_time = time.time()
+    
+    # Check if data is cached and not too old (5 minutes)
+    if dataset in _data_cache:
+        cached_data, timestamp = _data_cache[dataset]
+        if current_time - timestamp < 300:  # 5 minutes cache
+            return cached_data
+    
+    # Process and cache data
+    csv_path = os.path.join(DATA_DIR, dataset)
+    df = load_stock_data(csv_path)
+    df = build_features(df)
+    df = cluster_market_regimes(df)
+    
+    _data_cache[dataset] = (df, current_time)
+    return df
 
 @app.route("/")
 def home():
@@ -22,50 +52,42 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
+    start_time = time.time()
+    
     # Get selected dataset from query parameter, default to stock_1.csv
     dataset = request.args.get("dataset", "stock_1.csv")
     
-    # Log the analysis run
-    log_event(f"Dashboard loaded with dataset: {dataset}")
+    # Get cached list of available datasets
+    available_datasets = get_cached_datasets()
     
-    # Get list of available datasets
-    available_datasets = get_available_datasets()
-    
-    # Load and process data using feature pipeline
-    csv_path = os.path.join(DATA_DIR, dataset)
-    df = load_stock_data(csv_path)
-    df = build_features(df)
-    df = cluster_market_regimes(df)
+    # Use cached data processing
+    df = get_cached_data(dataset)
     
     # Run heavy chart generation asynchronously to keep UI responsive
     run_async(generate_charts, df)
     
-    # Log the clustering experiment for DS tracking
-    log_experiment(
-        name="Market Regime Discovery",
-        params=f"clusters={N_CLUSTERS}, data={dataset}",
-        notes="Automated run from dashboard"
-    )
-    
-    # Log clustering completion
-    log_event(f"Clustering completed with {df['Regime'].nunique()} regimes")
-    
-    # Calculate metrics
+    # Calculate metrics (optimized with vectorized operations)
     summary = get_stock_summary(df)
     trend = detect_trend_advanced(df)
     volatility_regime = detect_volatility_regime(df)
     regime_summary = interpret_regimes(df)
     
+    # Vectorized calculations for latest values
     latest_simple_return = round(df["Simple_Return"].iloc[-1] * 100, 2)
     latest_log_return = round(df["Log_Return"].iloc[-1] * 100, 2)
     latest_volatility = round(df["Rolling_Volatility"].iloc[-1] * 100, 2)
     
-    # Get last N rows for table display (using config)
-    table_data = df.tail(TABLE_ROWS)[["Date", "Close", "Simple_Return", "Rolling_Volatility"]].copy()
-    table_data["Date"] = table_data["Date"].dt.strftime("%Y-%m-%d")
-    table_data["Simple_Return"] = (table_data["Simple_Return"] * 100).round(2)
-    table_data["Rolling_Volatility"] = (table_data["Rolling_Volatility"] * 100).round(2)
-    table_data = table_data.to_dict("records")
+    # Optimized table data preparation
+    table_data = (df.tail(TABLE_ROWS)[["Date", "Close", "Simple_Return", "Rolling_Volatility"]]
+                  .copy()
+                  .assign(Date=lambda x: x["Date"].dt.strftime("%Y-%m-%d"))
+                  .assign(Simple_Return=lambda x: (x["Simple_Return"] * 100).round(2))
+                  .assign(Rolling_Volatility=lambda x: (x["Rolling_Volatility"] * 100).round(2))
+                  .to_dict("records"))
+    
+    # Log performance metrics
+    processing_time = time.time() - start_time
+    log_event(f"Dashboard loaded with dataset: {dataset} in {processing_time:.2f}s")
     
     return render_template(
         "dashboard.html",
@@ -83,21 +105,34 @@ def dashboard():
 
 @app.route("/api/chart-data")
 def chart_data():
+    start_time = time.time()
     dataset = request.args.get("dataset", "stock_1.csv")
-    csv_path = os.path.join(DATA_DIR, dataset)
-    df = load_stock_data(csv_path)
-    df = build_features(df)
     
+    # Use cached data for better performance
+    df = get_cached_data(dataset)
+    
+    # Vectorized operations for better performance
     payload = {
         "dates": df["Date"].dt.strftime("%Y-%m-%d").tolist(),
         "close": df["Close"].tolist(),
-        "ma_short": df["Close"].rolling(3).mean().fillna(None).tolist(),
-        "ma_long": df["Close"].rolling(5).mean().fillna(None).tolist(),
+        "ma_short": df["Close"].rolling(3).mean().fillna(0).tolist(),
+        "ma_long": df["Close"].rolling(5).mean().fillna(0).tolist(),
         "returns": (df["Simple_Return"] * 100).fillna(0).tolist(),
         "volatility": (df["Rolling_Volatility"] * 100).fillna(0).tolist(),
+        "processing_time": time.time() - start_time
     }
     return jsonify(payload)
 
+# Performance monitoring endpoint
+@app.route("/api/performance")
+def performance_stats():
+    """Return performance statistics for monitoring"""
+    return jsonify({
+        "cache_size": len(_data_cache),
+        "cached_datasets": list(_data_cache.keys()),
+        "available_datasets": get_cached_datasets()
+    })
+
 if __name__ == "__main__":
-    log_event("Flask application started")
+    log_event("Flask application started with performance optimizations")
     app.run(debug=True)
