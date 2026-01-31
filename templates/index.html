@@ -4,56 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Financial Time-Series Pattern Analysis</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
 </head>
 <body>
-    <div class="hero-container">
-        <div class="hero-content">
-            <h1 class="hero-title">AI Financial Time-Series Pattern Analysis</h1>
-            <p class="hero-subtitle">
-                Exploratory analysis of market behavior using data science techniques
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="header-logo">AI Analytics</a>
+            <nav class="header-nav">
+                <a href="/">Home</a>
+                <a href="/dashboard">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>AI Financial Time-Series Pattern Analysis</h1>
+            <p class="subtitle">Exploratory analysis of market behavior using data science and unsupervised machine learning</p>
+            <p class="description">
+                A research-grade analytical platform designed to identify patterns and regimes in financial time-series data. 
+                This system focuses on interpretability and exploratory analysis rather than prediction, 
+                providing insights into market behavior through advanced statistical methods and machine learning techniques.
             </p>
-            <p class="hero-description">
-                This web application analyzes stock market time-series data to identify patterns, 
-                trends, and market behavior using statistical methods and unsupervised machine learning. 
-                It does not perform trading or price prediction.
-            </p>
-            
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Flask application running successfully</span>
+            <div class="hero-cta">
+                <a href="/dashboard" class="button-primary">Open Dashboard</a>
             </div>
-            
-            <a href="/dashboard" class="cta-button">
-                View Dashboard
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-            </a>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Statistical Analysis</h3>
-                    <p>Returns, volatility, and trend detection using multi-signal analysis</p>
+        </div>
+    </section>
+
+    <!-- What This System Does -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>What This System Does</h2>
+                <p>Professional analytical capabilities for financial time-series research</p>
+            </div>
+            <div class="grid grid-3">
+                <div class="metric-card feature-card">
+                    <div class="feature-icon">FE</div>
+                    <h3>Time-Series Feature Engineering</h3>
+                    <p>Advanced feature extraction including logarithmic returns, rolling statistics, and volatility calculations. Features are engineered to capture the temporal dynamics and statistical properties of financial data.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🤖</div>
-                    <h3>Machine Learning</h3>
-                    <p>Unsupervised clustering to discover market behavioral regimes</p>
+                <div class="metric-card feature-card">
+                    <div class="feature-icon">VR</div>
+                    <h3>Volatility & Regime Analysis</h3>
+                    <p>Comprehensive volatility analysis with rolling window calculations and regime detection. Identifies distinct market behavioral states through unsupervised clustering of volatility patterns.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📈</div>
-                    <h3>Visual Insights</h3>
-                    <p>Clear visualizations and interpretable metrics for pattern analysis</p>
+                <div class="metric-card feature-card">
+                    <div class="feature-icon">XML</div>
+                    <h3>Explainable Unsupervised ML</h3>
+                    <p>Machine learning focused on pattern discovery and interpretation rather than prediction. Uses clustering algorithms to identify natural groupings in market behavior without predefined labels.</p>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <footer class="home-footer">
-        <p>&copy; 2026 AI Financial Time-Series Pattern Analysis | Educational Purpose Only</p>
+    </section>
+
+    <!-- How The Pipeline Works -->
+    <section class="section section-sm">
+        <div class="container">
+            <div class="section-header">
+                <h2>How The Pipeline Works</h2>
+                <p>Systematic data processing from raw inputs to analytical insights</p>
+            </div>
+            <div class="pipeline-flow">
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">1</div>
+                    <h4>Data</h4>
+                    <p>Raw time-series data with OHLCV information</p>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">2</div>
+                    <h4>Features</h4>
+                    <p>Engineered features including returns and volatility</p>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">3</div>
+                    <h4>Regimes</h4>
+                    <p>Unsupervised clustering identifies market states</p>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="pipeline-icon">4</div>
+                    <h4>Insights</h4>
+                    <p>Statistical analysis and interpretation of patterns</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design Philosophy -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Design Philosophy</h2>
+                <p>Principles guiding the analytical approach</p>
+            </div>
+            <div class="info-panel">
+                <h3>Interpretability Over Prediction</h3>
+                <p>This system prioritizes understanding market behavior over making predictions. The focus is on explaining what has happened and identifying patterns, rather than forecasting future movements. This approach aligns with responsible data science practices and avoids the pitfalls of overfitting in financial markets.</p>
+                
+                <h3>Exploratory Analysis Focus</h3>
+                <p>The platform is designed for exploratory data analysis, allowing researchers to discover patterns, test hypotheses, and gain insights into market dynamics. It provides tools for understanding volatility clustering, regime shifts, and statistical properties of financial time-series.</p>
+                
+                <h3>No Trading Signals</h3>
+                <p>Importantly, this system does not generate trading signals or investment advice. It is purely an analytical tool for research and educational purposes. The goal is to enhance understanding of market behavior, not to provide actionable trading recommendations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="section section-sm">
+        <div class="container">
+            <div class="section-header">
+                <h2>Technology Stack</h2>
+                <p>Professional tools for data science and analysis</p>
+            </div>
+            <div class="tech-stack">
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">Pandas</span>
+                <span class="tech-badge">NumPy</span>
+                <span class="tech-badge">Scikit-Learn</span>
+                <span class="tech-badge">Flask</span>
+                <span class="tech-badge">Matplotlib</span>
+                <span class="tech-badge">Unsupervised ML</span>
+                <span class="tech-badge">Statistical Analysis</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-disclaimer">
+                    <strong>Disclaimer:</strong> This system is for educational and analytical purposes only. 
+                    It does not provide trading or investment advice. Financial markets involve risk, 
+                    and past performance does not guarantee future results.
+                </div>
+                <div class="footer-credits">
+                    AI Financial Time-Series Pattern Analysis System • Research-Grade Analytics Platform
+                </div>
+            </div>
+        </div>
     </footer>
+
+    <script src="{{ url_for('static', filename='js/ui-effects.js') }}"></script>
 </body>
 </html>
