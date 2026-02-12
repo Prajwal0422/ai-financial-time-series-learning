@@ -1,96 +1,88 @@
-/**
- * Professional Dashboard Animations
- * Minimal, purposeful animations for analytical clarity
- */
+// Professional Dashboard Animations
+// Subtle, performance-focused animations using IntersectionObserver
 
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // Animate KPI cards on page load
-    function animateKPICards() {
-        const kpiCards = document.querySelectorAll('.kpi-card');
-        kpiCards.forEach((card, index) => {
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-                card.style.transition = 'all 0.6s ease-out';
-            }, 100 * (index + 1));
+(function() {
+    'use strict';
+
+    // Dataset selector functionality
+    const datasetSelect = document.getElementById('dataset-select');
+    if (datasetSelect) {
+        datasetSelect.addEventListener('change', function() {
+            const selectedDataset = this.value;
+            window.location.href = `/dashboard?dataset=${selectedDataset}`;
         });
     }
-    
-    // Animate chart cards when they come into view
-    function animateChartsOnScroll() {
-        const chartCards = document.querySelectorAll('.chart-card');
-        const interpretationItems = document.querySelectorAll('.interpretation-item');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.style.transition = 'all 0.6s ease-out';
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+
+    // Intersection Observer for scroll-triggered animations
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
         });
-        
-        chartCards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            observer.observe(card);
+    }, observerOptions);
+
+    // Observe all animated elements
+    const animatedElements = document.querySelectorAll(
+        '.kpi-card, .chart-card, .interpretation-item, .regime-table-container'
+    );
+
+    animatedElements.forEach(el => {
+        observer.observe(el);
+    });
+
+    // Add smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         });
-        
-        interpretationItems.forEach(item => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(20px)';
-            observer.observe(item);
-        });
-    }
-    
-    // Handle dataset selection
-    function handleDatasetSelection() {
-        const selector = document.getElementById('dataset-select');
-        if (selector) {
-            selector.addEventListener('change', function() {
-                const selectedDataset = this.value;
-                window.location.href = `/dashboard?dataset=${selectedDataset}`;
-            });
+    });
+
+    // Add visible class for CSS transitions
+    const style = document.createElement('style');
+    style.textContent = `
+        .kpi-card.visible,
+        .chart-card.visible,
+        .interpretation-item.visible,
+        .regime-table-container.visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
         }
-    }
-    
-    // Initialize all animations
-    function init() {
-        // Start KPI animation after a short delay
-        setTimeout(animateKPICards, 300);
-        
-        // Setup scroll animations
-        animateChartsOnScroll();
-        
-        // Setup dataset selector
-        handleDatasetSelection();
-    }
-    
-    // Run initialization
-    init();
-    
-    // Add subtle hover effects for interactive elements
-    function addHoverEffects() {
-        const interactiveElements = document.querySelectorAll('.kpi-card, .chart-card');
-        
-        interactiveElements.forEach(element => {
-            element.addEventListener('mouseenter', function() {
-                this.style.transition = 'all 0.2s ease';
-            });
-            
-            element.addEventListener('mouseleave', function() {
-                this.style.transition = 'all 0.2s ease';
-            });
+    `;
+    document.head.appendChild(style);
+
+    // Subtle hover effect for table rows
+    const tableRows = document.querySelectorAll('.regime-table tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.01)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+
+    // Performance monitoring (optional, can be removed)
+    if (window.performance && window.performance.timing) {
+        window.addEventListener('load', function() {
+            const loadTime = window.performance.timing.domContentLoadedEventEnd - 
+                           window.performance.timing.navigationStart;
+            console.log(`Dashboard loaded in ${loadTime}ms`);
         });
     }
-    
-    addHoverEffects();
-    
-    console.log('Professional dashboard animations initialized');
-});
+
+})();
