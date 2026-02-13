@@ -1,30 +1,24 @@
 /* Professional Analytics Dashboard */
 
 :root {
-    --primary: #1e293b;
-    --secondary: #64748b;
-    --accent: #3b82f6;
-    --accent-light: #60a5fa;
-    --success: #10b981;
-    --success-light: #34d399;
-    --danger: #ef4444;
-    --danger-light: #f87171;
-    --warning: #f59e0b;
-    --warning-light: #fbbf24;
-    --purple: #8b5cf6;
-    --purple-light: #a78bfa;
-    --teal: #14b8a6;
-    --teal-light: #2dd4bf;
-    --bg: #f1f5f9;
+    --primary: #0f172a;
+    --secondary: #475569;
+    --accent: #2563eb;
+    --accent-light: #3b82f6;
+    --success: #059669;
+    --danger: #dc2626;
+    --warning: #d97706;
+    --purple: #7c3aed;
+    --teal: #0d9488;
+    --bg: #f8fafc;
     --card-bg: #ffffff;
     --border: #e2e8f0;
     --text: #0f172a;
-    --text-muted: #94a3b8;
+    --text-muted: #64748b;
     
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-color: 0 10px 25px -5px rgba(59, 130, 246, 0.15);
     
     --radius: 8px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -53,11 +47,11 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-bottom: 1px solid var(--border);
+    background: linear-gradient(to right, #1e40af 0%, #1e3a8a 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 2rem 0;
     opacity: 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -163,9 +157,9 @@ body {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--purple));
+    width: 50px;
+    height: 3px;
+    background: var(--accent);
     border-radius: 2px;
 }
 
@@ -191,35 +185,18 @@ body {
     opacity: 0;
     transform: translateY(20px);
     position: relative;
-    overflow: hidden;
+    border-top: 3px solid transparent;
 }
 
-.kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--purple));
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.kpi-card:nth-child(1)::before { background: linear-gradient(90deg, #3b82f6, #2563eb); }
-.kpi-card:nth-child(2)::before { background: linear-gradient(90deg, #10b981, #059669); }
-.kpi-card:nth-child(3)::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
-.kpi-card:nth-child(4)::before { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
-.kpi-card:nth-child(5)::before { background: linear-gradient(90deg, #14b8a6, #0d9488); }
+.kpi-card:nth-child(1) { border-top-color: #2563eb; }
+.kpi-card:nth-child(2) { border-top-color: #059669; }
+.kpi-card:nth-child(3) { border-top-color: #d97706; }
+.kpi-card:nth-child(4) { border-top-color: #7c3aed; }
+.kpi-card:nth-child(5) { border-top-color: #0d9488; }
 
 .kpi-card:hover {
-    box-shadow: var(--shadow-color);
-    transform: translateY(-4px);
-    border-color: var(--accent-light);
-}
-
-.kpi-card:hover::before {
-    opacity: 1;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
 }
 
 .kpi-label {
@@ -234,10 +211,7 @@ body {
 .kpi-value {
     font-size: 1.75rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary);
     margin-bottom: 0.25rem;
 }
 
@@ -266,34 +240,11 @@ body {
     transition: var(--transition);
     opacity: 0;
     transform: translateY(20px);
-    position: relative;
 }
-
-.chart-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: var(--radius);
-    opacity: 0;
-    transition: var(--transition);
-    pointer-events: none;
-}
-
-.chart-card:nth-child(1)::after { box-shadow: 0 0 0 2px var(--accent-light); }
-.chart-card:nth-child(2)::after { box-shadow: 0 0 0 2px var(--success-light); }
-.chart-card:nth-child(3)::after { box-shadow: 0 0 0 2px var(--warning-light); }
-.chart-card:nth-child(4)::after { box-shadow: 0 0 0 2px var(--purple-light); }
 
 .chart-card:hover {
-    box-shadow: var(--shadow-color);
-    transform: translateY(-2px);
-}
-
-.chart-card:hover::after {
-    opacity: 0.3;
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
 }
 
 .chart-title {
@@ -301,25 +252,7 @@ body {
     font-weight: 600;
     color: var(--primary);
     margin-bottom: 1rem;
-    position: relative;
-    padding-left: 1rem;
 }
-
-.chart-title::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 20px;
-    border-radius: 2px;
-}
-
-.chart-card:nth-child(1) .chart-title::before { background: var(--accent); }
-.chart-card:nth-child(2) .chart-title::before { background: var(--success); }
-.chart-card:nth-child(3) .chart-title::before { background: var(--warning); }
-.chart-card:nth-child(4) .chart-title::before { background: var(--purple); }
 
 .chart-container {
     width: 100%;
@@ -365,17 +298,12 @@ body {
     transition: var(--transition);
     opacity: 0;
     transform: translateY(20px);
-    border-left: 4px solid var(--accent);
+    border-left: 3px solid var(--border);
 }
-
-.interpretation-item:nth-child(1) { border-left-color: var(--accent); }
-.interpretation-item:nth-child(2) { border-left-color: var(--success); }
-.interpretation-item:nth-child(3) { border-left-color: var(--purple); }
-.interpretation-item:nth-child(4) { border-left-color: var(--teal); }
 
 .interpretation-item:hover {
     box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    border-left-color: var(--accent);
 }
 
 .interpretation-item h3 {
@@ -417,7 +345,7 @@ body {
 }
 
 .regime-table thead {
-    background: linear-gradient(135deg, #667eea15, #764ba215);
+    background: #f8fafc;
 }
 
 .regime-table th {
@@ -447,7 +375,7 @@ body {
 .regime-id {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: linear-gradient(135deg, var(--accent-light), var(--purple-light));
+    background: var(--accent);
     border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -480,7 +408,7 @@ body {
     padding: 3rem 0;
     text-align: center;
     border-top: 1px solid var(--border);
-    background: linear-gradient(135deg, #667eea10, #764ba210);
+    background: var(--bg);
     margin-top: 4rem;
 }
 
