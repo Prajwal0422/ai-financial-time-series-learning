@@ -3,155 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Dashboard - AI Financial Time-Series</title>
+    <title>Dashboard - AI Financial Time-Series Pattern Analysis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header fade-in">
+    <!-- Header Navigation -->
+    <header class="header">
         <div class="container">
             <div class="header-content">
-                <h1 class="header-title">Financial Time-Series Analytics</h1>
-                <p class="header-subtitle">{{ current_dataset.replace('.csv', '').replace('_', ' ').title() }}</p>
+                <a href="/" class="header-logo">AI Analytics</a>
+                <nav class="header-nav">
+                    <a href="/">Home</a>
+                    <a href="/dashboard">Dashboard</a>
+                </nav>
             </div>
-            <nav class="header-nav">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/dashboard" class="nav-link active">Dashboard</a>
-            </nav>
         </div>
     </header>
 
+    <!-- Dashboard Header -->
+    <section class="dashboard-header">
+        <div class="container">
+            <div class="dashboard-header-content">
+                <div>
+                    <h1>Financial Time-Series Analysis Dashboard</h1>
+                    <p class="text-secondary">Analytical insights for {{ current_dataset.replace('.csv', '').replace('_', ' ').title() }}</p>
+                </div>
+                <div class="dashboard-meta">
+                    <span class="badge badge-primary">Dataset: {{ current_dataset }}</span>
+                </div>
+            </div>
+            <p class="mb-0">Professional analysis of market behavior patterns through statistical methods and unsupervised machine learning.</p>
+        </div>
+    </section>
+
     <!-- Dataset Selector -->
+    <div class="container">
+        <div class="card" style="max-width: 500px; margin: 0 auto var(--space-xl);">
+            <div style="display: flex; align-items: center; gap: var(--space-md);">
+                <label for="dataset-select" style="font-weight: var(--weight-semibold); color: var(--text-secondary);">Select Dataset:</label>
+                <select id="dataset-select" style="flex: 1; padding: 0.5rem; border: 1px solid var(--border-medium); border-radius: var(--radius-md); font-family: inherit;">
+                    {% for dataset in available_datasets %}
+                    <option value="{{ dataset }}" {% if dataset == current_dataset %}selected{% endif %}>
+                        {{ dataset.replace('.csv', '').replace('_', ' ').title() }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Summary Grid -->
     <section class="container">
-        <div class="dataset-selector fade-in" style="animation-delay: 0.1s">
-            <label for="dataset-select" class="selector-label">Dataset:</label>
-            <select id="dataset-select" class="selector">
-                {% for dataset in available_datasets %}
-                <option value="{{ dataset }}" {% if dataset == current_dataset %}selected{% endif %}>
-                    {{ dataset.replace('.csv', '').replace('_', ' ').title() }}
-                </option>
-                {% endfor %}
-            </select>
-        </div>
-    </section>
-
-    <!-- KPI Summary -->
-    <section class="container kpi-section">
-        <h2 class="section-title fade-in" style="animation-delay: 0.2s">Key Metrics</h2>
+        <h2 class="mb-lg">Statistical Summary</h2>
         <div class="kpi-grid">
-            <div class="kpi-card slide-up" style="animation-delay: 0.3s">
-                <div class="kpi-label">Date Range</div>
-                <div class="kpi-value">{{ summary.start_date }}</div>
-                <div class="kpi-subvalue">to {{ summary.end_date }}</div>
+            <div class="metric-card">
+                <div class="metric-label">Date Range</div>
+                <div class="metric-value">{{ summary.start_date }}</div>
+                <div class="metric-subvalue">to {{ summary.end_date }}</div>
             </div>
-            <div class="kpi-card slide-up" style="animation-delay: 0.35s">
-                <div class="kpi-label">Observations</div>
-                <div class="kpi-value">{{ summary.total_days }}</div>
-                <div class="kpi-subvalue">Trading days</div>
+            <div class="metric-card">
+                <div class="metric-label">Observations</div>
+                <div class="metric-value">{{ summary.total_days }}</div>
+                <div class="metric-subvalue">Trading days</div>
             </div>
-            <div class="kpi-card slide-up" style="animation-delay: 0.4s">
-                <div class="kpi-label">Average Close</div>
-                <div class="kpi-value">${{ summary.avg_close }}</div>
-                <div class="kpi-subvalue">Historical mean</div>
+            <div class="metric-card">
+                <div class="metric-label">Average Close</div>
+                <div class="metric-value">${{ summary.avg_close }}</div>
+                <div class="metric-subvalue">Historical mean</div>
             </div>
-            <div class="kpi-card slide-up" style="animation-delay: 0.45s">
-                <div class="kpi-label">Volatility</div>
-                <div class="kpi-value">{{ volatility_regime.replace(' Volatility Regime', '') }}</div>
-                <div class="kpi-subvalue">Current regime</div>
+            <div class="metric-card">
+                <div class="metric-label">Volatility Regime</div>
+                <div class="metric-value">{{ volatility_regime.replace(' Volatility Regime', '') }}</div>
+                <div class="metric-subvalue">Current behavior</div>
             </div>
-            <div class="kpi-card slide-up" style="animation-delay: 0.5s">
-                <div class="kpi-label">Trend</div>
-                <div class="kpi-value">{{ trend }}</div>
-                <div class="kpi-subvalue">Market signal</div>
+            <div class="metric-card">
+                <div class="metric-label">Market Trend</div>
+                <div class="metric-value">{{ trend }}</div>
+                <div class="metric-subvalue">Signal detection</div>
             </div>
         </div>
     </section>
 
-    <!-- Charts -->
-    <section class="container charts-section">
-        <h2 class="section-title fade-in" style="animation-delay: 0.6s">Visual Analysis</h2>
+    <!-- Visual Analysis Section -->
+    <section class="container">
+        <h2 class="mb-lg">Visual Analysis</h2>
         <div class="charts-grid">
-            <div class="chart-card slide-up" style="animation-delay: 0.7s">
+            <div class="chart-card">
                 <h3 class="chart-title">Price & Moving Averages</h3>
                 <div class="chart-container">
-                    <img src="{{ url_for('static', filename='charts/price_ma.png') }}" alt="Price and Moving Averages" class="chart-image">
+                    <img src="{{ url_for('static', filename='charts/price_ma.png') }}" alt="Price and Moving Averages">
                 </div>
-                <p class="chart-caption">Historical price with short and long-term moving averages for trend identification.</p>
+                <p class="chart-caption">Historical price action with short and long-term moving averages to identify structural trends and momentum changes.</p>
             </div>
 
-            <div class="chart-card slide-up" style="animation-delay: 0.75s">
+            <div class="chart-card">
                 <h3 class="chart-title">Returns Distribution</h3>
                 <div class="chart-container">
-                    <img src="{{ url_for('static', filename='charts/returns.png') }}" alt="Returns Distribution" class="chart-image">
+                    <img src="{{ url_for('static', filename='charts/returns.png') }}" alt="Returns Distribution">
                 </div>
-                <p class="chart-caption">Day-over-day percentage changes showing statistical properties of returns.</p>
+                <p class="chart-caption">Day-over-day percentage changes showing the distribution and statistical properties of historical returns.</p>
             </div>
 
-            <div class="chart-card slide-up" style="animation-delay: 0.8s">
+            <div class="chart-card">
                 <h3 class="chart-title">Volatility Analysis</h3>
                 <div class="chart-container">
-                    <img src="{{ url_for('static', filename='charts/volatility.png') }}" alt="Volatility Analysis" class="chart-image">
+                    <img src="{{ url_for('static', filename='charts/volatility.png') }}" alt="Volatility Analysis">
                 </div>
-                <p class="chart-caption">Rolling standard deviation tracking market uncertainty over time.</p>
+                <p class="chart-caption">Rolling standard deviation tracking market uncertainty and the magnitude of price fluctuations over time.</p>
             </div>
 
-            <div class="chart-card slide-up" style="animation-delay: 0.85s">
+            <div class="chart-card">
                 <h3 class="chart-title">Market Regimes</h3>
                 <div class="chart-container">
-                    <img src="{{ url_for('static', filename='charts/regimes.png') }}" alt="Market Regimes" class="chart-image">
+                    <img src="{{ url_for('static', filename='charts/regimes.png') }}" alt="Market Regimes">
                 </div>
-                <p class="chart-caption">Unsupervised clustering identifying distinct behavioral states.</p>
+                <p class="chart-caption">Unsupervised clustering identifying distinct market behavioral states based on volatility and return patterns.</p>
             </div>
         </div>
     </section>
 
-    <!-- Interpretation -->
-    <section class="container interpretation-section">
-        <h2 class="section-title fade-in" style="animation-delay: 0.9s">Analysis Interpretation</h2>
-        <div class="interpretation-grid">
-            <div class="interpretation-item slide-up" style="animation-delay: 0.95s">
+    <!-- Interpretation Panel -->
+    <section class="container">
+        <h2 class="mb-lg">Analysis Interpretation</h2>
+        <div class="grid grid-2">
+            <div class="info-panel">
                 <h3>Statistical Returns</h3>
-                <p>We use <strong>logarithmic returns</strong> for modeling because they are time-additive, enabling sophisticated mathematical analysis of market movements.</p>
+                <p>We use <strong>logarithmic returns</strong> for modeling because they are time-additive. This allows us to treat market movements as a continuous statistical signal rather than discrete price points, enabling more sophisticated mathematical analysis.</p>
             </div>
-            <div class="interpretation-item slide-up" style="animation-delay: 1s">
+            <div class="info-panel">
                 <h3>Volatility Clustering</h3>
-                <p>Market volatility exhibits <strong>clustering behavior</strong> - periods of high volatility group together. Our analysis detects these regime shifts.</p>
+                <p>Market volatility exhibits <strong>clustering behavior</strong> - periods of high volatility tend to group together. Our analysis detects these regime shifts to understand market state transitions and risk dynamics.</p>
             </div>
-            <div class="interpretation-item slide-up" style="animation-delay: 1.05s">
+            <div class="info-panel">
                 <h3>Pattern Recognition</h3>
-                <p>We employ <strong>unsupervised machine learning</strong> to identify patterns in high-dimensional feature space without human bias.</p>
+                <p>We employ <strong>unsupervised machine learning</strong> to identify patterns in high-dimensional feature space, removing human bias from market behavior analysis and discovering natural groupings in data.</p>
             </div>
-            <div class="interpretation-item slide-up" style="animation-delay: 1.1s">
+            <div class="info-panel">
                 <h3>Analysis Scope</h3>
-                <p>This system focuses on <strong>historical pattern analysis</strong> and statistical interpretation, not predictions or trading signals.</p>
+                <p>This system focuses on <strong>historical pattern analysis</strong> and statistical interpretation. We do not provide predictions or trading signals - our goal is understanding market behavior through data science.</p>
             </div>
         </div>
     </section>
 
-    <!-- Regime Summary -->
-    <section class="container regime-section">
-        <h2 class="section-title fade-in" style="animation-delay: 1.15s">Regime Performance</h2>
-        <div class="regime-table-container slide-up" style="animation-delay: 1.2s">
-            <table class="regime-table">
+    <!-- Regime Summary Table -->
+    <section class="container">
+        <h2 class="mb-lg">Regime Performance Summary</h2>
+        <div class="table-container">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Regime</th>
+                        <th>Regime ID</th>
                         <th>Classification</th>
-                        <th>Avg Return</th>
-                        <th>Avg Volatility</th>
-                        <th>Description</th>
+                        <th>Average Return</th>
+                        <th>Average Volatility</th>
+                        <th>Behavior Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for k, v in regime_summary.items() %}
                     <tr>
-                        <td><span class="regime-id">Cluster {{ k }}</span></td>
-                        <td class="regime-name">{{ v.label }}</td>
-                        <td class="return-value {{ 'positive' if v.avg_return > 0 else 'negative' }}">{{ v.avg_return }}%</td>
-                        <td class="volatility-value">{{ v.avg_volatility }}%</td>
+                        <td><span class="badge badge-secondary">Cluster {{ k }}</span></td>
+                        <td class="text-primary">{{ v.label }}</td>
+                        <td class="{{ 'text-accent' if v.avg_return > 0 else 'text-secondary' }}">{{ v.avg_return }}%</td>
+                        <td>{{ v.avg_volatility }}%</td>
                         <td>{{ v.description }}</td>
                     </tr>
                     {% endfor %}
@@ -160,17 +178,69 @@
         </div>
     </section>
 
+    <!-- Methodology Panel -->
+    <section class="container">
+        <h2 class="mb-lg">Methodology</h2>
+        <div class="methodology-panel">
+            <h3 class="mb-md">Technical Approach</h3>
+            <ul class="methodology-list">
+                <li>
+                    <div class="methodology-icon">1</div>
+                    <div class="methodology-content">
+                        <h4>Feature Engineering</h4>
+                        <p>Logarithmic returns and rolling statistics capture temporal dynamics and volatility patterns in the data.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="methodology-icon">2</div>
+                    <div class="methodology-content">
+                        <h4>Rolling Statistics</h4>
+                        <p>Window-based calculations identify local trends, volatility clustering, and regime-dependent behavior.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="methodology-icon">3</div>
+                    <div class="methodology-content">
+                        <h4>Clustering Analysis</h4>
+                        <p>K-means algorithm groups similar market states based on return and volatility characteristics.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="methodology-icon">4</div>
+                    <div class="methodology-content">
+                        <h4>Interpretability Focus</h4>
+                        <p>Results are presented for understanding rather than prediction, emphasizing statistical insights.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Data Disclaimer -->
+    <section class="container">
+        <div class="info-panel">
+            <h3>Data Disclaimer</h3>
+            <p><strong>Important:</strong> This analysis is based on historical data and is intended for educational and research purposes only. The identified patterns and regimes represent past behavior and should not be interpreted as predictive indicators. Market conditions change over time, and historical patterns may not repeat in the future.</p>
+            <p>This system does not provide investment advice, trading recommendations, or financial guidance. Users should consult with qualified financial professionals before making any investment decisions.</p>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p class="disclaimer">
-                <strong>Disclaimer:</strong> This system is for educational and analytical purposes only. 
-                It does not provide trading or investment advice. Past performance does not guarantee future results.
-            </p>
-            <p class="credits">AI Financial Time-Series Pattern Analysis • Research-Grade Analytics</p>
+            <div class="footer-content">
+                <div class="footer-disclaimer">
+                    <strong>Disclaimer:</strong> This system is for educational and analytical purposes only. 
+                    It does not provide trading or investment advice. Financial markets involve risk, 
+                    and past performance does not guarantee future results.
+                </div>
+                <div class="footer-credits">
+                    AI Financial Time-Series Pattern Analysis System • Research-Grade Analytics Platform
+                </div>
+            </div>
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ui-effects.js') }}"></script>
 </body>
 </html>

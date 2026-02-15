@@ -13,88 +13,111 @@
 <body>
     <!-- Header Navigation -->
     <header class="header">
-        <div class="header-content">
-            <a href="/" class="header-logo">AI Analytics</a>
-            <nav class="header-nav">
-                <a href="/">Home</a>
-                <a href="/dashboard">Dashboard</a>
-            </nav>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="header-logo">AI Analytics</a>
+                <nav class="header-nav">
+                    <a href="/">Home</a>
+                    <a href="/dashboard">Dashboard</a>
+                </nav>
+            </div>
         </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>AI Financial Time-Series Pattern Analysis</h1>
-            <p class="subtitle">Exploratory analysis of market behavior using data science and unsupervised machine learning</p>
-            <p class="description">
-                A research-grade analytical platform designed to identify patterns and regimes in financial time-series data. 
-                This system focuses on interpretability and exploratory analysis rather than prediction, 
-                providing insights into market behavior through advanced statistical methods and machine learning techniques.
+            <h1 class="hero-title fade-in">AI Financial Time-Series Pattern Analysis</h1>
+            <p class="hero-subtitle fade-in fade-in-delay-1">
+                Interpretable machine learning for understanding market behavior through statistical pattern recognition
             </p>
-            <div class="hero-cta">
-                <a href="/dashboard" class="button-primary">Open Dashboard</a>
+            <p class="hero-description fade-in fade-in-delay-2">
+                This platform applies unsupervised learning and statistical methods to identify behavioral regimes in financial time-series data. 
+                Built for data scientists and researchers who prioritize interpretability over prediction.
+            </p>
+            <div class="hero-cta fade-in fade-in-delay-3">
+                <a href="/dashboard" class="btn btn-primary btn-lg">Open Dashboard</a>
             </div>
         </div>
     </section>
 
-    <!-- What This System Does -->
+    <!-- What This Platform Does -->
     <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2>What This System Does</h2>
-                <p>Professional analytical capabilities for financial time-series research</p>
+                <h2 class="section-title">What This Platform Does</h2>
+                <p class="section-subtitle">
+                    Three core analytical capabilities for understanding market behavior
+                </p>
             </div>
-            <div class="grid grid-3">
-                <div class="metric-card feature-card">
-                    <div class="feature-icon">FE</div>
-                    <h3>Time-Series Feature Engineering</h3>
-                    <p>Advanced feature extraction including logarithmic returns, rolling statistics, and volatility calculations. Features are engineered to capture the temporal dynamics and statistical properties of financial data.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">1</div>
+                    <h3 class="feature-title">Time-Series Feature Engineering</h3>
+                    <p class="feature-description">
+                        Transforms raw price data into meaningful statistical features including logarithmic returns, 
+                        rolling volatility, and momentum indicators. These features capture temporal dynamics and 
+                        enable pattern recognition across different time scales.
+                    </p>
                 </div>
-                <div class="metric-card feature-card">
-                    <div class="feature-icon">VR</div>
-                    <h3>Volatility & Regime Analysis</h3>
-                    <p>Comprehensive volatility analysis with rolling window calculations and regime detection. Identifies distinct market behavioral states through unsupervised clustering of volatility patterns.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon">2</div>
+                    <h3 class="feature-title">Volatility & Regime Analysis</h3>
+                    <p class="feature-description">
+                        Identifies distinct market behavioral states through unsupervised clustering. Detects periods 
+                        of high volatility, trending behavior, and consolidation patterns without making predictive claims. 
+                        Focuses on understanding what happened, not what will happen.
+                    </p>
                 </div>
-                <div class="metric-card feature-card">
-                    <div class="feature-icon">XML</div>
-                    <h3>Explainable Unsupervised ML</h3>
-                    <p>Machine learning focused on pattern discovery and interpretation rather than prediction. Uses clustering algorithms to identify natural groupings in market behavior without predefined labels.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon">3</div>
+                    <h3 class="feature-title">Explainable ML Insights</h3>
+                    <p class="feature-description">
+                        Every analytical result is accompanied by statistical interpretation and visual explanation. 
+                        No black-box predictions—only transparent analysis of historical patterns with clear methodology 
+                        and limitations.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How The Pipeline Works -->
-    <section class="section section-sm">
+    <!-- How It Works -->
+    <section class="section" style="background: var(--bg-tertiary);">
         <div class="container">
             <div class="section-header">
-                <h2>How The Pipeline Works</h2>
-                <p>Systematic data processing from raw inputs to analytical insights</p>
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">
+                    A transparent analytical pipeline from data to insights
+                </p>
             </div>
-            <div class="pipeline-flow">
-                <div class="pipeline-step">
-                    <div class="pipeline-icon">1</div>
-                    <h4>Data</h4>
-                    <p>Raw time-series data with OHLCV information</p>
+
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h4>Data Ingestion</h4>
+                    <p>Load historical OHLCV time-series data</p>
                 </div>
-                <div class="pipeline-arrow">→</div>
-                <div class="pipeline-step">
-                    <div class="pipeline-icon">2</div>
-                    <h4>Features</h4>
-                    <p>Engineered features including returns and volatility</p>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h4>Feature Engineering</h4>
+                    <p>Calculate returns, volatility, and technical indicators</p>
                 </div>
-                <div class="pipeline-arrow">→</div>
-                <div class="pipeline-step">
-                    <div class="pipeline-icon">3</div>
-                    <h4>Regimes</h4>
-                    <p>Unsupervised clustering identifies market states</p>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h4>Regime Detection</h4>
+                    <p>Apply clustering to identify behavioral patterns</p>
                 </div>
-                <div class="pipeline-arrow">→</div>
-                <div class="pipeline-step">
-                    <div class="pipeline-icon">4</div>
-                    <h4>Insights</h4>
-                    <p>Statistical analysis and interpretation of patterns</p>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h4>Interpretation</h4>
+                    <p>Generate statistical summaries and visualizations</p>
                 </div>
             </div>
         </div>
@@ -102,40 +125,92 @@
 
     <!-- Design Philosophy -->
     <section class="section">
-        <div class="container">
+        <div class="container container-narrow">
             <div class="section-header">
-                <h2>Design Philosophy</h2>
-                <p>Principles guiding the analytical approach</p>
+                <h2 class="section-title">Design Philosophy</h2>
             </div>
+
             <div class="info-panel">
                 <h3>Interpretability Over Prediction</h3>
-                <p>This system prioritizes understanding market behavior over making predictions. The focus is on explaining what has happened and identifying patterns, rather than forecasting future movements. This approach aligns with responsible data science practices and avoids the pitfalls of overfitting in financial markets.</p>
-                
-                <h3>Exploratory Analysis Focus</h3>
-                <p>The platform is designed for exploratory data analysis, allowing researchers to discover patterns, test hypotheses, and gain insights into market dynamics. It provides tools for understanding volatility clustering, regime shifts, and statistical properties of financial time-series.</p>
-                
-                <h3>No Trading Signals</h3>
-                <p>Importantly, this system does not generate trading signals or investment advice. It is purely an analytical tool for research and educational purposes. The goal is to enhance understanding of market behavior, not to provide actionable trading recommendations.</p>
+                <p>
+                    This platform does not make trading recommendations or predict future prices. Instead, it focuses on 
+                    understanding historical market behavior through statistical analysis. Every insight is explainable, 
+                    every method is transparent, and every limitation is acknowledged.
+                </p>
+            </div>
+
+            <div class="info-panel">
+                <h3>Research-Grade Methodology</h3>
+                <p>
+                    Built using established statistical methods and machine learning techniques from academic research. 
+                    Logarithmic returns for time-additivity, rolling windows for local statistics, and k-means clustering 
+                    for regime identification. No proprietary algorithms, no hidden complexity.
+                </p>
+            </div>
+
+            <div class="info-panel">
+                <h3>Educational Purpose</h3>
+                <p>
+                    Designed as a learning tool for understanding how data science applies to financial analysis. 
+                    Demonstrates feature engineering, unsupervised learning, and statistical interpretation in a 
+                    real-world context. Not intended for production trading systems.
+                </p>
             </div>
         </div>
     </section>
 
     <!-- Technology Stack -->
-    <section class="section section-sm">
+    <section class="section" style="background: var(--bg-tertiary);">
         <div class="container">
             <div class="section-header">
-                <h2>Technology Stack</h2>
-                <p>Professional tools for data science and analysis</p>
+                <h2 class="section-title">Technology Stack</h2>
+                <p class="section-subtitle">
+                    Built with industry-standard tools for data science and web development
+                </p>
             </div>
-            <div class="tech-stack">
-                <span class="tech-badge">Python</span>
-                <span class="tech-badge">Pandas</span>
-                <span class="tech-badge">NumPy</span>
-                <span class="tech-badge">Scikit-Learn</span>
-                <span class="tech-badge">Flask</span>
-                <span class="tech-badge">Matplotlib</span>
-                <span class="tech-badge">Unsupervised ML</span>
-                <span class="tech-badge">Statistical Analysis</span>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <h4 class="mb-sm">Data Processing</h4>
+                    <p class="text-secondary mb-xs">Python 3.x</p>
+                    <p class="text-secondary mb-xs">Pandas & NumPy</p>
+                    <p class="text-secondary">Statistical Computing</p>
+                </div>
+
+                <div class="card">
+                    <h4 class="mb-sm">Machine Learning</h4>
+                    <p class="text-secondary mb-xs">Scikit-learn</p>
+                    <p class="text-secondary mb-xs">K-means Clustering</p>
+                    <p class="text-secondary">Unsupervised Methods</p>
+                </div>
+
+                <div class="card">
+                    <h4 class="mb-sm">Visualization</h4>
+                    <p class="text-secondary mb-xs">Matplotlib</p>
+                    <p class="text-secondary mb-xs">Statistical Charts</p>
+                    <p class="text-secondary">Time-Series Plots</p>
+                </div>
+
+                <div class="card">
+                    <h4 class="mb-sm">Web Framework</h4>
+                    <p class="text-secondary mb-xs">Flask</p>
+                    <p class="text-secondary mb-xs">Jinja2 Templates</p>
+                    <p class="text-secondary">RESTful API</p>
+                </div>
+
+                <div class="card">
+                    <h4 class="mb-sm">Frontend</h4>
+                    <p class="text-secondary mb-xs">Semantic HTML5</p>
+                    <p class="text-secondary mb-xs">Modern CSS</p>
+                    <p class="text-secondary">Vanilla JavaScript</p>
+                </div>
+
+                <div class="card">
+                    <h4 class="mb-sm">Architecture</h4>
+                    <p class="text-secondary mb-xs">Modular Design</p>
+                    <p class="text-secondary mb-xs">Async Processing</p>
+                    <p class="text-secondary">Logging & Monitoring</p>
+                </div>
             </div>
         </div>
     </section>
@@ -147,7 +222,8 @@
                 <div class="footer-disclaimer">
                     <strong>Disclaimer:</strong> This system is for educational and analytical purposes only. 
                     It does not provide trading or investment advice. Financial markets involve risk, 
-                    and past performance does not guarantee future results.
+                    and past performance does not guarantee future results. All analysis is based on historical 
+                    data and should not be used for making investment decisions.
                 </div>
                 <div class="footer-credits">
                     AI Financial Time-Series Pattern Analysis System • Research-Grade Analytics Platform
