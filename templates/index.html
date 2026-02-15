@@ -7,8 +7,227 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
+    <style>
+        /* Landing Page Specific Styles */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: var(--space-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .header-nav {
+            display: flex;
+            gap: var(--space-md);
+        }
+        
+        .header-nav a {
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+        }
+        
+        .header-nav a:hover {
+            color: var(--accent-primary);
+            background: rgba(6, 182, 212, 0.1);
+        }
+        
+        .hero {
+            padding: var(--space-2xl) 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-tertiary);
+            max-width: 700px;
+            margin: 0 auto var(--space-xl);
+            line-height: 1.8;
+        }
+        
+        .section {
+            padding: var(--space-2xl) 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .feature-card {
+            padding: var(--space-xl);
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-md);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+        }
+        
+        .process-step {
+            flex: 1;
+            text-align: center;
+            padding: var(--space-lg);
+        }
+        
+        .process-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto var(--space-sm);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        
+        .process-arrow {
+            font-size: 2rem;
+            color: var(--accent-primary);
+        }
+        
+        .info-panel {
+            border-left: 3px solid var(--accent-primary);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .info-panel h3 {
+            margin-bottom: var(--space-sm);
+        }
+        
+        .info-panel p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .tech-card h4 {
+            margin-bottom: var(--space-sm);
+        }
+        
+        .tech-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .footer {
+            background: var(--surface-dark);
+            border-top: 1px solid var(--border-subtle);
+            padding: var(--space-xl) 0;
+            margin-top: var(--space-2xl);
+            text-align: center;
+        }
+        
+        .footer-disclaimer {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-sm);
+            line-height: 1.7;
+        }
+        
+        .footer-credits {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .process-steps { flex-direction: column; }
+            .process-arrow { transform: rotate(90deg); }
+        }
+    </style>
 </head>
 <body>
     <!-- Header Navigation -->
@@ -27,16 +246,16 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1 class="hero-title fade-in">AI Financial Time-Series Pattern Analysis</h1>
-            <p class="hero-subtitle fade-in fade-in-delay-1">
+            <h1 class="hero-title gradient-text fade-in">AI Financial Time-Series Pattern Analysis</h1>
+            <p class="hero-subtitle fade-in animate-delay-1">
                 Interpretable machine learning for understanding market behavior through statistical pattern recognition
             </p>
-            <p class="hero-description fade-in fade-in-delay-2">
+            <p class="hero-description fade-in animate-delay-2">
                 This platform applies unsupervised learning and statistical methods to identify behavioral regimes in financial time-series data. 
                 Built for data scientists and researchers who prioritize interpretability over prediction.
             </p>
-            <div class="hero-cta fade-in fade-in-delay-3">
-                <a href="/dashboard" class="btn btn-primary btn-lg">Open Dashboard</a>
+            <div class="fade-in animate-delay-3">
+                <a href="/dashboard" class="btn btn-primary">Open Dashboard</a>
             </div>
         </div>
     </section>
@@ -45,14 +264,14 @@
     <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">What This Platform Does</h2>
+                <h2 class="section-title gradient-text">What This Platform Does</h2>
                 <p class="section-subtitle">
                     Three core analytical capabilities for understanding market behavior
                 </p>
             </div>
             
             <div class="feature-grid">
-                <div class="feature-card">
+                <div class="glass-card feature-card">
                     <div class="feature-icon">1</div>
                     <h3 class="feature-title">Time-Series Feature Engineering</h3>
                     <p class="feature-description">
@@ -62,7 +281,7 @@
                     </p>
                 </div>
 
-                <div class="feature-card">
+                <div class="glass-card feature-card">
                     <div class="feature-icon">2</div>
                     <h3 class="feature-title">Volatility & Regime Analysis</h3>
                     <p class="feature-description">
@@ -72,7 +291,7 @@
                     </p>
                 </div>
 
-                <div class="feature-card">
+                <div class="glass-card feature-card">
                     <div class="feature-icon">3</div>
                     <h3 class="feature-title">Explainable ML Insights</h3>
                     <p class="feature-description">
@@ -86,38 +305,38 @@
     </section>
 
     <!-- How It Works -->
-    <section class="section" style="background: var(--bg-tertiary);">
+    <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">How It Works</h2>
+                <h2 class="section-title gradient-text">How It Works</h2>
                 <p class="section-subtitle">
                     A transparent analytical pipeline from data to insights
                 </p>
             </div>
 
             <div class="process-steps">
-                <div class="process-step">
+                <div class="surface-card process-step">
                     <div class="process-number">1</div>
                     <h4>Data Ingestion</h4>
-                    <p>Load historical OHLCV time-series data</p>
+                    <p class="text-secondary">Load historical OHLCV time-series data</p>
                 </div>
                 <div class="process-arrow">→</div>
-                <div class="process-step">
+                <div class="surface-card process-step">
                     <div class="process-number">2</div>
                     <h4>Feature Engineering</h4>
-                    <p>Calculate returns, volatility, and technical indicators</p>
+                    <p class="text-secondary">Calculate returns, volatility, and technical indicators</p>
                 </div>
                 <div class="process-arrow">→</div>
-                <div class="process-step">
+                <div class="surface-card process-step">
                     <div class="process-number">3</div>
                     <h4>Regime Detection</h4>
-                    <p>Apply clustering to identify behavioral patterns</p>
+                    <p class="text-secondary">Apply clustering to identify behavioral patterns</p>
                 </div>
                 <div class="process-arrow">→</div>
-                <div class="process-step">
+                <div class="surface-card process-step">
                     <div class="process-number">4</div>
                     <h4>Interpretation</h4>
-                    <p>Generate statistical summaries and visualizations</p>
+                    <p class="text-secondary">Generate statistical summaries and visualizations</p>
                 </div>
             </div>
         </div>
@@ -125,12 +344,12 @@
 
     <!-- Design Philosophy -->
     <section class="section">
-        <div class="container container-narrow">
+        <div class="container" style="max-width: 960px;">
             <div class="section-header">
-                <h2 class="section-title">Design Philosophy</h2>
+                <h2 class="section-title gradient-text">Design Philosophy</h2>
             </div>
 
-            <div class="info-panel">
+            <div class="glass-card info-panel">
                 <h3>Interpretability Over Prediction</h3>
                 <p>
                     This platform does not make trading recommendations or predict future prices. Instead, it focuses on 
@@ -139,7 +358,7 @@
                 </p>
             </div>
 
-            <div class="info-panel">
+            <div class="glass-card info-panel">
                 <h3>Research-Grade Methodology</h3>
                 <p>
                     Built using established statistical methods and machine learning techniques from academic research. 
@@ -148,7 +367,7 @@
                 </p>
             </div>
 
-            <div class="info-panel">
+            <div class="glass-card info-panel">
                 <h3>Educational Purpose</h3>
                 <p>
                     Designed as a learning tool for understanding how data science applies to financial analysis. 
@@ -160,56 +379,56 @@
     </section>
 
     <!-- Technology Stack -->
-    <section class="section" style="background: var(--bg-tertiary);">
+    <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Technology Stack</h2>
+                <h2 class="section-title gradient-text">Technology Stack</h2>
                 <p class="section-subtitle">
                     Built with industry-standard tools for data science and web development
                 </p>
             </div>
 
-            <div class="grid grid-3">
-                <div class="card">
-                    <h4 class="mb-sm">Data Processing</h4>
-                    <p class="text-secondary mb-xs">Python 3.x</p>
-                    <p class="text-secondary mb-xs">Pandas & NumPy</p>
-                    <p class="text-secondary">Statistical Computing</p>
+            <div class="tech-grid">
+                <div class="surface-card tech-card">
+                    <h4>Data Processing</h4>
+                    <p>Python 3.x</p>
+                    <p>Pandas & NumPy</p>
+                    <p>Statistical Computing</p>
                 </div>
 
-                <div class="card">
-                    <h4 class="mb-sm">Machine Learning</h4>
-                    <p class="text-secondary mb-xs">Scikit-learn</p>
-                    <p class="text-secondary mb-xs">K-means Clustering</p>
-                    <p class="text-secondary">Unsupervised Methods</p>
+                <div class="surface-card tech-card">
+                    <h4>Machine Learning</h4>
+                    <p>Scikit-learn</p>
+                    <p>K-means Clustering</p>
+                    <p>Unsupervised Methods</p>
                 </div>
 
-                <div class="card">
-                    <h4 class="mb-sm">Visualization</h4>
-                    <p class="text-secondary mb-xs">Matplotlib</p>
-                    <p class="text-secondary mb-xs">Statistical Charts</p>
-                    <p class="text-secondary">Time-Series Plots</p>
+                <div class="surface-card tech-card">
+                    <h4>Visualization</h4>
+                    <p>Matplotlib</p>
+                    <p>Statistical Charts</p>
+                    <p>Time-Series Plots</p>
                 </div>
 
-                <div class="card">
-                    <h4 class="mb-sm">Web Framework</h4>
-                    <p class="text-secondary mb-xs">Flask</p>
-                    <p class="text-secondary mb-xs">Jinja2 Templates</p>
-                    <p class="text-secondary">RESTful API</p>
+                <div class="surface-card tech-card">
+                    <h4>Web Framework</h4>
+                    <p>Flask</p>
+                    <p>Jinja2 Templates</p>
+                    <p>RESTful API</p>
                 </div>
 
-                <div class="card">
-                    <h4 class="mb-sm">Frontend</h4>
-                    <p class="text-secondary mb-xs">Semantic HTML5</p>
-                    <p class="text-secondary mb-xs">Modern CSS</p>
-                    <p class="text-secondary">Vanilla JavaScript</p>
+                <div class="surface-card tech-card">
+                    <h4>Frontend</h4>
+                    <p>Semantic HTML5</p>
+                    <p>Modern CSS</p>
+                    <p>Vanilla JavaScript</p>
                 </div>
 
-                <div class="card">
-                    <h4 class="mb-sm">Architecture</h4>
-                    <p class="text-secondary mb-xs">Modular Design</p>
-                    <p class="text-secondary mb-xs">Async Processing</p>
-                    <p class="text-secondary">Logging & Monitoring</p>
+                <div class="surface-card tech-card">
+                    <h4>Architecture</h4>
+                    <p>Modular Design</p>
+                    <p>Async Processing</p>
+                    <p>Logging & Monitoring</p>
                 </div>
             </div>
         </div>
@@ -218,20 +437,18 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-disclaimer">
-                    <strong>Disclaimer:</strong> This system is for educational and analytical purposes only. 
-                    It does not provide trading or investment advice. Financial markets involve risk, 
-                    and past performance does not guarantee future results. All analysis is based on historical 
-                    data and should not be used for making investment decisions.
-                </div>
-                <div class="footer-credits">
-                    AI Financial Time-Series Pattern Analysis System • Research-Grade Analytics Platform
-                </div>
+            <div class="footer-disclaimer">
+                <strong>Disclaimer:</strong> This system is for educational and analytical purposes only. 
+                It does not provide trading or investment advice. Financial markets involve risk, 
+                and past performance does not guarantee future results. All analysis is based on historical 
+                data and should not be used for making investment decisions.
+            </div>
+            <div class="footer-credits">
+                AI Financial Time-Series Pattern Analysis System • Research-Grade Analytics Platform
             </div>
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/ui-effects.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/effects.js') }}"></script>
 </body>
 </html>
