@@ -57,71 +57,106 @@ def dashboard():
     # Get selected dataset from query parameter, default to stock_1.csv
     dataset = request.args.get("dataset", "stock_1.csv")
     
+    # Validate dataset parameter
+    if not dataset.endswith('.csv'):
+        log_event(f"Invalid dataset format: {dataset}")
+        return "Invalid dataset format. Must be a CSV file.", 400
+    
     # Get cached list of available datasets
     available_datasets = get_cached_datasets()
     
-    # Use cached data processing
-    df = get_cached_data(dataset)
+    # Check if dataset exists
+    if dataset not in available_datasets:
+        log_event(f"Dataset not found: {dataset}")
+        return f"Dataset '{dataset}' not found. Available datasets: {', '.join(available_datasets)}", 404
     
-    # Run heavy chart generation asynchronously to keep UI responsive
-    run_async(generate_charts, df)
+    try:
+        # Use cached data processing
+        df = get_cached_data(dataset)
+        
+        # Run heavy chart generation asynchronously to keep UI responsive
+        run_async(generate_charts, df)
+        
+        # Calculate metrics (optimized with vectorized operations)
+        summary = get_stock_summary(df)
+        trend = detect_trend_advanced(df)
+        volatility_regime = detect_volatility_regime(df)
+        regime_summary = interpret_regimes(df)
+        
+        # Vectorized calculations for latest values
+        latest_simple_return = round(df["Simple_Return"].iloc[-1] * 100, 2)
+        latest_log_return = round(df["Log_Return"].iloc[-1] * 100, 2)
+        latest_volatility = round(df["Rolling_Volatility"].iloc[-1] * 100, 2)
+        
+        # Optimized table data preparation
+        table_data = (df.tail(TABLE_ROWS)[["Date", "Close", "Simple_Return", "Rolling_Volatility"]]
+                      .copy()
+                      .assign(Date=lambda x: x["Date"].dt.strftime("%Y-%m-%d"))
+                      .assign(Simple_Return=lambda x: (x["Simple_Return"] * 100).round(2))
+                      .assign(Rolling_Volatility=lambda x: (x["Rolling_Volatility"] * 100).round(2))
+                      .to_dict("records"))
+        
+        # Log performance metrics
+        processing_time = time.time() - start_time
+        log_event(f"Dashboard loaded with dataset: {dataset} in {processing_time:.2f}s")
+        
+        return render_template(
+            "dashboard.html",
+            summary=summary,
+            trend=trend,
+            simple_return=latest_simple_return,
+            log_return=latest_log_return,
+            volatility=latest_volatility,
+            volatility_regime=volatility_regime,
+            regime_summary=regime_summary,
+            table_data=table_data,
+            available_datasets=available_datasets,
+            current_dataset=dataset
+        )
     
-    # Calculate metrics (optimized with vectorized operations)
-    summary = get_stock_summary(df)
-    trend = detect_trend_advanced(df)
-    volatility_regime = detect_volatility_regime(df)
-    regime_summary = interpret_regimes(df)
+    except FileNotFoundError as e:
+        log_event(f"Model not found error: {str(e)}")
+        return f"Model files not found. Please run 'python train_model.py' first. Error: {str(e)}", 500
     
-    # Vectorized calculations for latest values
-    latest_simple_return = round(df["Simple_Return"].iloc[-1] * 100, 2)
-    latest_log_return = round(df["Log_Return"].iloc[-1] * 100, 2)
-    latest_volatility = round(df["Rolling_Volatility"].iloc[-1] * 100, 2)
+    except KeyError as e:
+        log_event(f"Missing feature error: {str(e)}")
+        return f"Missing required feature: {str(e)}. Please regenerate processed data with 'python pipeline.py'", 500
     
-    # Optimized table data preparation
-    table_data = (df.tail(TABLE_ROWS)[["Date", "Close", "Simple_Return", "Rolling_Volatility"]]
-                  .copy()
-                  .assign(Date=lambda x: x["Date"].dt.strftime("%Y-%m-%d"))
-                  .assign(Simple_Return=lambda x: (x["Simple_Return"] * 100).round(2))
-                  .assign(Rolling_Volatility=lambda x: (x["Rolling_Volatility"] * 100).round(2))
-                  .to_dict("records"))
-    
-    # Log performance metrics
-    processing_time = time.time() - start_time
-    log_event(f"Dashboard loaded with dataset: {dataset} in {processing_time:.2f}s")
-    
-    return render_template(
-        "dashboard.html",
-        summary=summary,
-        trend=trend,
-        simple_return=latest_simple_return,
-        log_return=latest_log_return,
-        volatility=latest_volatility,
-        volatility_regime=volatility_regime,
-        regime_summary=regime_summary,
-        table_data=table_data,
-        available_datasets=available_datasets,
-        current_dataset=dataset
-    )
+    except Exception as e:
+        log_event(f"Dashboard error: {str(e)}")
+        return f"An error occurred: {str(e)}", 500
 
 @app.route("/api/chart-data")
 def chart_data():
     start_time = time.time()
     dataset = request.args.get("dataset", "stock_1.csv")
     
-    # Use cached data for better performance
-    df = get_cached_data(dataset)
+    # Validate dataset parameter
+    if not dataset.endswith('.csv'):
+        return jsonify({"error": "Invalid dataset format"}), 400
     
-    # Vectorized operations for better performance
-    payload = {
-        "dates": df["Date"].dt.strftime("%Y-%m-%d").tolist(),
-        "close": df["Close"].tolist(),
-        "ma_short": df["Close"].rolling(3).mean().fillna(0).tolist(),
-        "ma_long": df["Close"].rolling(5).mean().fillna(0).tolist(),
-        "returns": (df["Simple_Return"] * 100).fillna(0).tolist(),
-        "volatility": (df["Rolling_Volatility"] * 100).fillna(0).tolist(),
-        "processing_time": time.time() - start_time
-    }
-    return jsonify(payload)
+    try:
+        # Use cached data for better performance
+        df = get_cached_data(dataset)
+        
+        # Vectorized operations for better performance
+        payload = {
+            "dates": df["Date"].dt.strftime("%Y-%m-%d").tolist(),
+            "close": df["Close"].tolist(),
+            "ma_short": df["Close"].rolling(3).mean().fillna(0).tolist(),
+            "ma_long": df["Close"].rolling(5).mean().fillna(0).tolist(),
+            "returns": (df["Simple_Return"] * 100).fillna(0).tolist(),
+            "volatility": (df["Rolling_Volatility"] * 100).fillna(0).tolist(),
+            "processing_time": time.time() - start_time
+        }
+        return jsonify(payload)
+    
+    except FileNotFoundError as e:
+        return jsonify({"error": f"Dataset not found: {dataset}"}), 404
+    
+    except Exception as e:
+        log_event(f"Chart data error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 # Performance monitoring endpoint
 @app.route("/api/performance")

@@ -20,7 +20,7 @@ def calculate_returns(df):
     df["Rolling_Mean_Return"] = log_returns.rolling(window=RETURN_WINDOW, min_periods=1).mean()
     df["Rolling_Volatility"] = log_returns.rolling(window=VOLATILITY_WINDOW, min_periods=1).std()
     
-    # Handle NaN values efficiently
-    df = df.fillna(method='bfill').fillna(0)
+    # Handle NaN values efficiently (updated for pandas compatibility)
+    df = df.bfill().fillna(0)
     
     return df
