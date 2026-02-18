@@ -216,53 +216,109 @@
         requestAnimationFrame(update);
     }
 
-    // Add subtle cursor glow effect
-    const cursor = document.createElement('div');
-    cursor.className = 'cursor-glow';
-    cursor.style.cssText = `
+    // Premium custom cursor with ring and dot
+    const cursorDot = document.createElement('div');
+    const cursorRing = document.createElement('div');
+    
+    cursorDot.className = 'cursor-dot';
+    cursorRing.className = 'cursor-ring';
+    
+    cursorDot.style.cssText = `
         position: fixed;
-        width: 24px;
-        height: 24px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(6, 182, 212, 0.4), transparent 70%);
+        background: var(--accent-primary);
+        pointer-events: none;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.1s ease;
+        box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+    `;
+    
+    cursorRing.style.cssText = `
+        position: fixed;
+        width: 32px;
+        height: 32px;
+        border: 2px solid var(--accent-primary);
+        border-radius: 50%;
         pointer-events: none;
         z-index: 9999;
-        transition: transform 0.15s ease, opacity 0.15s ease;
         opacity: 0;
-        mix-blend-mode: screen;
+        transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease, height 0.3s ease;
+        box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
     `;
-    document.body.appendChild(cursor);
+    
+    document.body.appendChild(cursorDot);
+    document.body.appendChild(cursorRing);
 
     let cursorX = 0, cursorY = 0;
+    let ringX = 0, ringY = 0;
     let cursorVisible = false;
+
+    // Smooth cursor movement with delay for ring
+    function updateCursor() {
+        // Ring follows with slight delay (smooth trailing effect)
+        ringX += (cursorX - ringX) * 0.15;
+        ringY += (cursorY - ringY) * 0.15;
+        
+        cursorDot.style.left = (cursorX - 4) + 'px';
+        cursorDot.style.top = (cursorY - 4) + 'px';
+        cursorRing.style.left = (ringX - 16) + 'px';
+        cursorRing.style.top = (ringY - 16) + 'px';
+        
+        requestAnimationFrame(updateCursor);
+    }
+    
+    updateCursor();
 
     document.addEventListener('mousemove', (e) => {
         cursorX = e.clientX;
         cursorY = e.clientY;
         
         if (!cursorVisible) {
-            cursor.style.opacity = '1';
+            cursorDot.style.opacity = '1';
+            cursorRing.style.opacity = '0.6';
             cursorVisible = true;
         }
-        
-        cursor.style.left = (cursorX - 12) + 'px';
-        cursor.style.top = (cursorY - 12) + 'px';
     });
 
     document.addEventListener('mouseleave', () => {
-        cursor.style.opacity = '0';
+        cursorDot.style.opacity = '0';
+        cursorRing.style.opacity = '0';
         cursorVisible = false;
     });
 
-    // Scale cursor on interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .selector, .data-table tr');
+    // Enhanced cursor effects on interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .selector, .data-table tr, .btn, .badge, .metric-card, .chart-card');
+    
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(1.5)';
+            cursorDot.style.transform = 'scale(1.5)';
+            cursorRing.style.width = '48px';
+            cursorRing.style.height = '48px';
+            cursorRing.style.borderColor = 'var(--accent-secondary)';
+            cursorRing.style.borderWidth = '3px';
         });
+        
         el.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1)';
+            cursorDot.style.transform = 'scale(1)';
+            cursorRing.style.width = '32px';
+            cursorRing.style.height = '32px';
+            cursorRing.style.borderColor = 'var(--accent-primary)';
+            cursorRing.style.borderWidth = '2px';
         });
+    });
+
+    // Click effect - ring pulse
+    document.addEventListener('mousedown', () => {
+        cursorDot.style.transform = 'scale(0.8)';
+        cursorRing.style.transform = 'scale(0.9)';
+    });
+
+    document.addEventListener('mouseup', () => {
+        cursorDot.style.transform = 'scale(1)';
+        cursorRing.style.transform = 'scale(1)';
     });
 
 })();

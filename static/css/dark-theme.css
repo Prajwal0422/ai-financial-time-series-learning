@@ -122,6 +122,31 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
+    cursor: none; /* Hide default cursor */
+}
+
+/* Custom cursor styles */
+.cursor-dot,
+.cursor-ring {
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Show default cursor on inputs and textareas */
+input, textarea, select {
+    cursor: auto !important;
+}
+
+/* Cursor trail effect */
+@keyframes cursorPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
 }
 
 /* Typography */
