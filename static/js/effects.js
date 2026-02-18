@@ -216,109 +216,82 @@
         requestAnimationFrame(update);
     }
 
-    // Premium custom cursor with ring and dot
-    const cursorDot = document.createElement('div');
-    const cursorRing = document.createElement('div');
-    
-    cursorDot.className = 'cursor-dot';
-    cursorRing.className = 'cursor-ring';
-    
-    cursorDot.style.cssText = `
+    // Subtle cursor follower effect (doesn't hide default cursor)
+    const cursorFollower = document.createElement('div');
+    cursorFollower.className = 'cursor-follower';
+    cursorFollower.style.cssText = `
         position: fixed;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--accent-primary);
-        pointer-events: none;
-        z-index: 10000;
-        opacity: 0;
-        transition: opacity 0.3s ease, transform 0.1s ease;
-        box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
-    `;
-    
-    cursorRing.style.cssText = `
-        position: fixed;
-        width: 32px;
-        height: 32px;
-        border: 2px solid var(--accent-primary);
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(6, 182, 212, 0.3);
         border-radius: 50%;
         pointer-events: none;
         z-index: 9999;
         opacity: 0;
-        transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease, height 0.3s ease;
-        box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        transition: opacity 0.3s ease, transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+        mix-blend-mode: screen;
     `;
-    
-    document.body.appendChild(cursorDot);
-    document.body.appendChild(cursorRing);
+    document.body.appendChild(cursorFollower);
 
-    let cursorX = 0, cursorY = 0;
-    let ringX = 0, ringY = 0;
-    let cursorVisible = false;
+    let followerX = 0, followerY = 0;
+    let currentX = 0, currentY = 0;
+    let isVisible = false;
 
-    // Smooth cursor movement with delay for ring
-    function updateCursor() {
-        // Ring follows with slight delay (smooth trailing effect)
-        ringX += (cursorX - ringX) * 0.15;
-        ringY += (cursorY - ringY) * 0.15;
+    // Smooth follower animation
+    function animateFollower() {
+        // Smooth interpolation
+        followerX += (currentX - followerX) * 0.1;
+        followerY += (currentY - followerY) * 0.1;
         
-        cursorDot.style.left = (cursorX - 4) + 'px';
-        cursorDot.style.top = (cursorY - 4) + 'px';
-        cursorRing.style.left = (ringX - 16) + 'px';
-        cursorRing.style.top = (ringY - 16) + 'px';
+        cursorFollower.style.left = (followerX - 20) + 'px';
+        cursorFollower.style.top = (followerY - 20) + 'px';
         
-        requestAnimationFrame(updateCursor);
+        requestAnimationFrame(animateFollower);
     }
     
-    updateCursor();
+    animateFollower();
 
     document.addEventListener('mousemove', (e) => {
-        cursorX = e.clientX;
-        cursorY = e.clientY;
+        currentX = e.clientX;
+        currentY = e.clientY;
         
-        if (!cursorVisible) {
-            cursorDot.style.opacity = '1';
-            cursorRing.style.opacity = '0.6';
-            cursorVisible = true;
+        if (!isVisible) {
+            cursorFollower.style.opacity = '1';
+            isVisible = true;
         }
     });
 
     document.addEventListener('mouseleave', () => {
-        cursorDot.style.opacity = '0';
-        cursorRing.style.opacity = '0';
-        cursorVisible = false;
+        cursorFollower.style.opacity = '0';
+        isVisible = false;
     });
 
-    // Enhanced cursor effects on interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .selector, .data-table tr, .btn, .badge, .metric-card, .chart-card');
+    // Expand on interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, .selector, .btn, .badge, .metric-card, .chart-card, .glass-card, .surface-card');
     
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            cursorDot.style.transform = 'scale(1.5)';
-            cursorRing.style.width = '48px';
-            cursorRing.style.height = '48px';
-            cursorRing.style.borderColor = 'var(--accent-secondary)';
-            cursorRing.style.borderWidth = '3px';
+            cursorFollower.style.width = '60px';
+            cursorFollower.style.height = '60px';
+            cursorFollower.style.borderColor = 'rgba(6, 182, 212, 0.6)';
+            cursorFollower.style.borderWidth = '3px';
         });
         
         el.addEventListener('mouseleave', () => {
-            cursorDot.style.transform = 'scale(1)';
-            cursorRing.style.width = '32px';
-            cursorRing.style.height = '32px';
-            cursorRing.style.borderColor = 'var(--accent-primary)';
-            cursorRing.style.borderWidth = '2px';
+            cursorFollower.style.width = '40px';
+            cursorFollower.style.height = '40px';
+            cursorFollower.style.borderColor = 'rgba(6, 182, 212, 0.3)';
+            cursorFollower.style.borderWidth = '2px';
         });
     });
 
-    // Click effect - ring pulse
+    // Click effect
     document.addEventListener('mousedown', () => {
-        cursorDot.style.transform = 'scale(0.8)';
-        cursorRing.style.transform = 'scale(0.9)';
+        cursorFollower.style.transform = 'scale(0.8)';
     });
 
     document.addEventListener('mouseup', () => {
-        cursorDot.style.transform = 'scale(1)';
-        cursorRing.style.transform = 'scale(1)';
+        cursorFollower.style.transform = 'scale(1)';
     });
 
 })();

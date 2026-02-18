@@ -122,32 +122,9 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
-    cursor: none; /* Hide default cursor */
 }
 
-/* Custom cursor styles */
-.cursor-dot,
-.cursor-ring {
-    pointer-events: none;
-    user-select: none;
-}
-
-/* Show default cursor on inputs and textareas */
-input, textarea, select {
-    cursor: auto !important;
-}
-
-/* Cursor trail effect */
-@keyframes cursorPulse {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 0.6;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 0.8;
-    }
-}
+/* Show default cursor - removed custom cursor hiding */
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
@@ -390,11 +367,26 @@ a:hover {
     position: relative;
     transition: all 0.3s ease;
     animation: navItemFadeIn 0.6s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.logo-text {
+    font-weight: 700;
+}
+
+.header-logo:hover .logo-icon {
+    transform: scale(1.2) rotate(5deg);
 }
 
 .header-logo:hover {
-    animation: logoGlow 2s ease-in-out infinite;
-    transform: scale(1.05);
+    transform: translateY(-2px);
 }
 
 .header-logo::after {
@@ -416,12 +408,25 @@ a:hover {
     animation: navItemFadeIn 0.6s ease-out 0.2s both;
 }
 
-.header-nav a {
+.nav-link {
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
 }
 
-.header-nav a::before {
+.nav-icon {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover .nav-icon {
+    transform: scale(1.2) translateY(-2px);
+}
+
+.nav-link::before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -433,11 +438,11 @@ a:hover {
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.header-nav a:hover::before {
+.nav-link:hover::before {
     width: 80%;
 }
 
-.header-nav a::after {
+.nav-link::after {
     content: '';
     position: absolute;
     top: 0;
@@ -453,17 +458,17 @@ a:hover {
     transition: left 0.6s ease;
 }
 
-.header-nav a:hover::after {
+.nav-link:hover::after {
     left: 100%;
 }
 
-.header-nav a.active {
+.nav-link.active {
     color: var(--accent-primary);
     background: rgba(6, 182, 212, 0.15);
     border: 1px solid rgba(6, 182, 212, 0.3);
 }
 
-.header-nav a.active::before {
+.nav-link.active::before {
     width: 80%;
 }
 
