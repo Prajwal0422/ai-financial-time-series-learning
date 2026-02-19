@@ -8,6 +8,7 @@ from analysis.clustering import cluster_market_regimes
 from analysis.charts import generate_charts
 from analysis.regime_labels import interpret_regimes
 from api.analysis_api import analysis_api
+from api.realtime_api import realtime_bp  # NEW: Real-time API
 from analysis.async_tasks import run_async
 from analysis.logger import log_event, log_experiment
 from config import DATA_DIR, TABLE_ROWS, N_CLUSTERS
@@ -17,6 +18,7 @@ import time
 
 app = Flask(__name__)
 app.register_blueprint(analysis_api, url_prefix="/api")
+app.register_blueprint(realtime_bp)  # NEW: Register real-time blueprint
 
 # Performance optimization: Cache dataset lists
 @lru_cache(maxsize=32)
@@ -171,3 +173,11 @@ def performance_stats():
 if __name__ == "__main__":
     log_event("Flask application started with performance optimizations")
     app.run(debug=True)
+
+
+# NEW: Real-Time Dashboard Route
+@app.route("/realtime")
+def realtime_dashboard():
+    """Real-time market data dashboard"""
+    log_event("Real-time dashboard accessed")
+    return render_template("realtime.html")

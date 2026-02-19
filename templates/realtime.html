@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Market Data | AI Financial Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
+    <style>
+        .realtime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stock-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+        
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .ticker-symbol {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #06b6d4;
+        }
+        
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin: 0.5rem 0;
+        }
+        
+        .change {
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            display: inline-block;
+        }
+        
+        .change.positive {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .change.negative {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .change.neutral {
+            color: #94a3b8;
+            background: rgba(148, 163, 184, 0.1);
+        }
+        
+        .update-time {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-top: 0.5rem;
+        }
+        
+        .market-summary {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(8, 145, 178, 0.1));
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #06b6d4;
+        }
+        
+        .summary-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+        
+        .spinner {
+            border: 3px solid rgba(6, 182, 212, 0.1);
+            border-top: 3px solid #06b6d4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.4);
+        }
+        
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: #06b6d4;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin: 3rem 0;">
+            <h1 style="font-size: 3rem; background: linear-gradient(135deg, #06b6d4, #0891b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                🔴 Real-Time Market Data
+            </h1>
+            <p style="color: #94a3b8; font-size: 1.125rem; margin-top: 1rem;">
+                Live stock prices updated every minute
+            </p>
+        </header>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <button class="refresh-btn" onclick="refreshData()">
+                🔄 Refresh Now
+            </button>
+            
+            <div class="auto-refresh">
+                <span style="color: #cbd5e1;">Auto-refresh:</span>
+                <div class="toggle-switch" id="autoRefreshToggle" onclick="toggleAutoRefresh()">
+                    <div class="toggle-slider"></div>
+                </div>
+                <span style="color: #94a3b8; font-size: 0.875rem;" id="refreshStatus">Off</span>
+            </div>
+        </div>
+
+        <div class="market-summary" id="marketSummary">
+            <h2 style="color: #06b6d4; margin-bottom: 1rem;">📊 Market Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-value" id="avgChange">--</div>
+                    <div class="summary-label">Avg Change</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="gainers">--</div>
+                    <div class="summary-label">Gainers</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="losers">--</div>
+                    <div class="summary-label">Losers</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value" id="totalStocks">--</div>
+                    <div class="summary-label">Total Stocks</div>
+                </div>
+            </div>
+            <div class="update-time" id="lastUpdate">Last updated: --</div>
+        </div>
+
+        <div id="loadingIndicator" class="loading">
+            <div class="spinner"></div>
+            <p>Loading real-time data...</p>
+        </div>
+
+        <div class="realtime-grid" id="stockGrid" style="display: none;">
+            <!-- Stock cards will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        let autoRefreshInterval = null;
+        let isAutoRefresh = false;
+
+        async function fetchRealtimeData() {
+            try {
+                const response = await fetch('/api/realtime/current');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayStockData(result.data);
+                    await fetchMarketSummary();
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    document.getElementById('stockGrid').style.display = 'grid';
+                } else {
+                    console.error('Error fetching data:', result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function fetchMarketSummary() {
+            try {
+                const response = await fetch('/api/realtime/summary');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const summary = result.summary;
+                    document.getElementById('avgChange').textContent = 
+                        (summary.avg_change >= 0 ? '+' : '') + summary.avg_change.toFixed(2) + '%';
+                    document.getElementById('gainers').textContent = summary.gainers;
+                    document.getElementById('losers').textContent = summary.losers;
+                    document.getElementById('totalStocks').textContent = summary.total_stocks;
+                    
+                    if (summary.last_update) {
+                        const updateTime = new Date(summary.last_update);
+                        document.getElementById('lastUpdate').textContent = 
+                            'Last updated: ' + updateTime.toLocaleTimeString();
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching summary:', error);
+            }
+        }
+
+        function displayStockData(data) {
+            const grid = document.getElementById('stockGrid');
+            grid.innerHTML = '';
+            
+            // Sort by ticker
+            const sortedTickers = Object.keys(data).sort();
+            
+            sortedTickers.forEach(ticker => {
+                const stock = data[ticker];
+                const changeClass = stock.change_percent > 0 ? 'positive' : 
+                                   stock.change_percent < 0 ? 'negative' : 'neutral';
+                const changeSymbol = stock.change_percent > 0 ? '▲' : 
+                                    stock.change_percent < 0 ? '▼' : '●';
+                
+                const card = document.createElement('div');
+                card.className = 'stock-card';
+                card.innerHTML = `
+                    <div class="stock-header">
+                        <div class="ticker-symbol">${stock.ticker}</div>
+                    </div>
+                    <div class="price">$${stock.price.toFixed(2)}</div>
+                    <div class="change ${changeClass}">
+                        ${changeSymbol} ${Math.abs(stock.change_percent).toFixed(2)}%
+                    </div>
+                    <div class="update-time">
+                        ${new Date(stock.timestamp).toLocaleTimeString()}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function refreshData() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('stockGrid').style.display = 'none';
+            fetchRealtimeData();
+        }
+
+        function toggleAutoRefresh() {
+            isAutoRefresh = !isAutoRefresh;
+            const toggle = document.getElementById('autoRefreshToggle');
+            const status = document.getElementById('refreshStatus');
+            
+            if (isAutoRefresh) {
+                toggle.classList.add('active');
+                status.textContent = 'On (60s)';
+                autoRefreshInterval = setInterval(refreshData, 60000); // 60 seconds
+            } else {
+                toggle.classList.remove('active');
+                status.textContent = 'Off';
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                }
+            }
+        }
+
+        // Initial load
+        fetchRealtimeData();
+    </script>
+</body>
+</html>

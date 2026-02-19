@@ -1,11 +1,13 @@
 # AI Financial Time-Series Pattern Analysis
-### Professional Analytical ML System for Market Behavior Discovery
+### Professional Mid-Level ML Engineering System for Market Behavior Discovery
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/flask-3.1.0-green.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://img.shields.io/badge/tests-18%20passed-brightgreen.svg)](tests/)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](PROFESSIONAL_UPGRADES.md)
 
-> **A professional machine learning system for analyzing financial time-series data through unsupervised pattern discovery and statistical analysis. This is NOT a trading bot or prediction system—it's an analytical tool focused on interpretability and insight.**
+> **A professional machine learning system with model selection, stability analysis, experiment tracking, and statistical validation. Features real data integration, model versioning, and interpretable regime insights. This is NOT a trading bot—it's a research-grade analytical tool.**
 
 ---
 
@@ -14,11 +16,14 @@
 This application demonstrates professional ML engineering practices applied to financial time-series analysis. It identifies market behavioral regimes using unsupervised learning, calculates statistical metrics, and presents insights through a premium dark-mode dashboard.
 
 **What This System Does:**
-- ✅ Analyzes historical market behavior patterns
-- ✅ Discovers market regimes through clustering
-- ✅ Calculates returns, volatility, and momentum
-- ✅ Visualizes patterns and trends
-- ✅ Provides interpretable insights
+- ✅ Systematically selects optimal clustering parameters (K=3 to K=8)
+- ✅ Validates clustering stability across multiple runs
+- ✅ Downloads real stock data from Yahoo Finance
+- ✅ Performs statistical validation (ADF tests, distributions)
+- ✅ Tracks experiments with full reproducibility
+- ✅ Manages model versions with metadata
+- ✅ Generates interpretable regime insights
+- ✅ Visualizes patterns with professional charts
 
 **What This System Does NOT Do:**
 - ❌ Predict future prices
@@ -68,13 +73,59 @@ This application demonstrates professional ML engineering practices applied to f
 
 ## 📊 Key Features
 
-### 1. Professional Data Pipeline
+### 🎯 Professional ML Engineering (NEW in v3.0)
+
+#### 1. Model Selection & Comparison
+- **Systematic K Selection:** Tests K=3 to K=8
+- **Multiple Metrics:** Silhouette, Davies-Bouldin, Calinski-Harabasz, Inertia
+- **Visual Comparison:** 4-panel comparison chart
+- **Optimal Selection:** Automatic best K identification
+
+#### 2. Clustering Stability Analysis
+- **Multiple Runs:** 10 independent clustering runs
+- **Similarity Metrics:** Adjusted Rand Index (ARI), Normalized Mutual Information (NMI)
+- **Statistical Summary:** Mean, std, min, max
+- **Stability Rating:** High/Moderate/Low classification
+
+#### 3. Real Data Integration
+- **Yahoo Finance:** Download real stock data via yfinance
+- **Batch Download:** Multiple stocks at once
+- **Configurable:** Any ticker, any date range
+- **Error Handling:** Robust validation and reporting
+
+#### 4. Statistical Validation
+- **Stationarity Tests:** Augmented Dickey-Fuller (ADF) test
+- **Distribution Analysis:** Comprehensive feature statistics
+- **Normality Testing:** Shapiro-Wilk test
+- **Data Quality:** Missing values, infinites, duplicates
+
+#### 5. Experiment Tracking
+- **Unique IDs:** MD5-based experiment identification
+- **Full Logging:** Parameters, metrics, metadata
+- **Dual Storage:** JSONL log + CSV summary
+- **Query Tools:** Retrieve, compare, find best experiments
+
+#### 6. Model Versioning
+- **Version Tags:** Timestamp-based versioning
+- **Artifact Management:** Model, scaler, features, metrics
+- **Registry:** Central version tracking
+- **Operations:** Save, load, compare, rollback
+
+#### 7. Regime Interpretation
+- **Automatic Labeling:** Rule-based regime naming
+- **Characteristics:** Statistical summaries per regime
+- **Natural Language:** Business-friendly descriptions
+- **Insights:** Actionable market behavior explanations
+
+### 📊 Core Features
+
+#### 1. Professional Data Pipeline
 - **Raw Data:** 10 major stocks, 10 years, 36,500 data points
 - **Processed Data:** 36,010 rows with 20 engineered features
 - **Proper Separation:** Raw/Processed/Features directories
 - **Data Validation:** Comprehensive quality checks
 
-### 2. Feature Engineering (20 Features)
+#### 2. Feature Engineering (20 Features)
 - **Returns:** Log returns, simple returns
 - **Moving Averages:** 10, 30, 50-day MAs
 - **Volatility:** 10, 30-day rolling standard deviation
@@ -84,26 +135,26 @@ This application demonstrates professional ML engineering practices applied to f
 - **Range:** High-low range indicators
 - **Trend Signals:** MA crossover signals
 
-### 3. Unsupervised ML (K-Means Clustering)
-- **Algorithm:** K-Means with 4 clusters
+#### 3. Unsupervised ML (K-Means Clustering)
+- **Algorithm:** K-Means with optimal K selection
 - **Features Used:** 7 carefully selected features
-- **Evaluation:** Silhouette score (0.1832), Davies-Bouldin index (1.5266)
-- **Interpretation:** Regime labels (Stable Growth, Volatile Growth, etc.)
-- **Persistence:** Models saved with joblib
+- **Evaluation:** Multiple quality metrics
+- **Interpretation:** Interpretable regime labels
+- **Persistence:** Models saved with versioning
 
-### 4. Premium Dark UI
+#### 4. Premium Dark UI
 - **Design:** Bloomberg-inspired professional interface
 - **Effects:** Glassmorphism, subtle animations
 - **Responsive:** Mobile-friendly design
 - **Components:** KPI cards, chart cards, regime table, methodology panel
 
-### 5. Professional Engineering
+#### 5. Professional Engineering
 - **Configuration Management:** Centralized config.py
 - **Logging:** Event and experiment tracking
 - **Caching:** LRU cache for performance
 - **Async Processing:** Non-blocking chart generation
 - **Error Handling:** Comprehensive validation
-- **Testing:** Unit test framework (pytest)
+- **Testing:** 18 unit tests (100% pass rate)
 
 ---
 
@@ -128,14 +179,82 @@ cd ai-financial-time-series-learning
 pip install -r requirements.txt
 ```
 
-3. **Run the application**
+### Basic Usage (Synthetic Data)
+
+3. **Generate synthetic data**
+```bash
+python scripts/generate_realistic_data.py
+```
+
+4. **Process features**
+```bash
+python pipeline.py
+```
+
+5. **Train model (basic)**
+```bash
+python train_model.py
+```
+
+6. **Run application**
 ```bash
 python app.py
 ```
 
-4. **Open your browser**
+7. **Open browser**
 ```
 http://127.0.0.1:5000
+```
+
+### Advanced Usage (Real Data + Full Pipeline)
+
+3. **Download real stock data**
+```bash
+python scripts/download_yahoo_data.py
+```
+
+4. **Process features**
+```bash
+python pipeline.py
+```
+
+5. **Run advanced training pipeline**
+```bash
+python train_model_advanced.py
+```
+This will:
+- Perform statistical validation
+- Compare K=3 to K=8
+- Select optimal K
+- Analyze stability
+- Generate regime insights
+- Version the model
+- Track the experiment
+
+6. **Run tests**
+```bash
+python -m pytest tests/ -v
+```
+
+7. **Start application**
+```bash
+python app.py
+```
+
+### Quick Commands
+
+```bash
+# View experiment history
+python -c "from analysis.experiment_tracker import ExperimentTracker; ExperimentTracker().print_summary()"
+
+# View model versions
+python -c "from analysis.model_versioning import ModelVersionManager; ModelVersionManager().print_registry()"
+
+# Run all tests
+python -m pytest tests/ -v
+
+# Check model metrics
+python -c "import joblib; print(joblib.load('models/metrics.pkl'))"
 ```
 
 ---
@@ -458,3 +577,327 @@ Portfolio project demonstrating professional ML engineering practices
 **Last Updated:** February 16, 2026  
 **Version:** 2.0.0  
 **Status:** Production-Ready Portfolio Project
+
+
+---
+
+## 🆕 What's New in v3.0 (Professional ML Engineering Upgrade)
+
+### Advanced ML Modules
+
+#### `analysis/model_selection.py`
+Systematic model comparison and selection:
+- Evaluates K=3 to K=8 with multiple metrics
+- Generates comparison visualizations
+- Automatic optimal K selection
+- Exports results to JSON
+
+#### `analysis/stability.py`
+Clustering stability analysis:
+- Runs clustering 10 times with different seeds
+- Computes ARI and NMI similarity metrics
+- Statistical summary (mean ± std)
+- Stability classification
+
+#### `analysis/statistical_validation.py`
+Statistical rigor and validation:
+- ADF stationarity tests
+- Feature distribution analysis
+- Normality testing (Shapiro-Wilk)
+- Data quality checks
+
+#### `analysis/experiment_tracker.py`
+Full experiment tracking:
+- Unique experiment IDs
+- Parameter and metric logging
+- JSONL + CSV dual storage
+- Query and comparison tools
+
+#### `analysis/model_versioning.py`
+Enterprise-grade model versioning:
+- Timestamp-based version tags
+- Artifact management (model, scaler, features, metrics)
+- Version registry
+- Load, compare, rollback operations
+
+#### `analysis/regime_insights.py`
+Interpretable regime analysis:
+- Automatic regime labeling
+- Statistical characterization
+- Natural language descriptions
+- Business-friendly insights
+
+#### `scripts/download_yahoo_data.py`
+Real data integration:
+- Yahoo Finance data download
+- Batch processing for multiple stocks
+- Configurable date ranges
+- Error handling and validation
+
+#### `train_model_advanced.py`
+Complete professional ML pipeline:
+- 9-step comprehensive workflow
+- Statistical validation → Model selection → Stability analysis
+- Regime insights → Versioning → Experiment tracking
+- Full reproducibility
+
+### Usage Examples
+
+**Download Real Data:**
+```python
+from scripts.download_yahoo_data import download_multiple_stocks
+
+tickers = ['AAPL', 'MSFT', 'GOOGL']
+results = download_multiple_stocks(tickers, start_date='2020-01-01')
+```
+
+**Track Experiments:**
+```python
+from analysis.experiment_tracker import ExperimentTracker
+
+tracker = ExperimentTracker()
+exp_id = tracker.log_experiment(
+    experiment_name="KMeans_K4_7features",
+    parameters={'n_clusters': 4, 'n_features': 7},
+    metrics={'silhouette': 0.1686, 'ari': 0.8234}
+)
+```
+
+**Version Models:**
+```python
+from analysis.model_versioning import ModelVersionManager
+
+manager = ModelVersionManager()
+version = manager.save_model(
+    model=kmeans,
+    scaler=scaler,
+    features=feature_list,
+    metrics=metrics_dict,
+    description="Optimal K=4 selected via comparison"
+)
+```
+
+**Get Regime Insights:**
+```python
+from analysis.regime_insights import get_regime_interpretation
+
+interpretation = get_regime_interpretation(regime_id=0)
+print(f"{interpretation['label']}: {interpretation['description']}")
+# Output: "Stable Growth: Positive returns with low volatility"
+```
+
+### New Artifacts Generated
+
+```
+models/
+├── versions/                    # Model versions
+│   └── v_20260218_143022/      # Timestamped version
+│       ├── model.pkl
+│       ├── scaler.pkl
+│       ├── features.pkl
+│       ├── metrics.pkl
+│       └── metadata.json
+├── model_registry.json          # Version registry
+├── model_comparison.json        # K comparison results
+├── stability_metrics.json       # Stability analysis
+├── validation_report.json       # Statistical validation
+└── regime_insights.json         # Regime interpretations
+
+experiments/
+├── experiment_log.jsonl         # Detailed experiment log
+└── experiments_summary.csv      # Tabular summary
+
+static/charts/
+└── model_comparison.png         # K comparison visualization
+```
+
+### Documentation
+
+See [PROFESSIONAL_UPGRADES.md](PROFESSIONAL_UPGRADES.md) for complete details on:
+- Implementation details for each module
+- Professional ML practices demonstrated
+- Before/after comparison
+- Interview talking points
+- Technical depth analysis
+
+---
+
+## 🎓 Skills Demonstrated
+
+### Machine Learning
+- ✅ Unsupervised learning (K-Means clustering)
+- ✅ Hyperparameter selection (systematic K comparison)
+- ✅ Model evaluation (multiple metrics)
+- ✅ Stability analysis (ARI, NMI)
+- ✅ Feature engineering (20 features)
+- ✅ Feature selection (7 ML features)
+- ✅ Model persistence and versioning
+
+### Statistics
+- ✅ Time-series analysis
+- ✅ Stationarity testing (ADF)
+- ✅ Distribution analysis
+- ✅ Normality testing (Shapiro-Wilk)
+- ✅ Similarity metrics (ARI, NMI)
+- ✅ Quality metrics (Silhouette, Davies-Bouldin)
+
+### Software Engineering
+- ✅ Modular architecture (25+ modules)
+- ✅ Configuration management
+- ✅ Error handling and validation
+- ✅ Logging and monitoring
+- ✅ Unit testing (18 tests, 100% pass)
+- ✅ Documentation (comprehensive)
+- ✅ Version control (Git)
+
+### Data Engineering
+- ✅ Data pipeline design
+- ✅ ETL processes (raw → processed → features)
+- ✅ Data quality validation
+- ✅ Real data integration (Yahoo Finance)
+- ✅ Efficient data processing (pandas)
+
+### MLOps
+- ✅ Experiment tracking
+- ✅ Model versioning
+- ✅ Artifact management
+- ✅ Reproducibility (random seeds, logging)
+- ✅ Model registry pattern
+
+### Full-Stack Development
+- ✅ Backend (Flask, Python)
+- ✅ Frontend (HTML, CSS, JavaScript)
+- ✅ API design (RESTful endpoints)
+- ✅ UI/UX (Bloomberg-inspired design)
+- ✅ Responsive design
+
+---
+
+## 📈 Project Evolution
+
+### v1.0 - Initial Implementation
+- Basic Flask application
+- Simple data loading
+- K-Means clustering (hardcoded K=3)
+- Basic dashboard
+
+### v2.0 - Professional Polish
+- Premium dark theme UI
+- 20 feature engineering functions
+- Comprehensive testing (18 tests)
+- Professional documentation
+- Model persistence
+
+### v3.0 - ML Engineering Upgrade (Current)
+- ✅ Model selection (K=3 to K=8)
+- ✅ Stability analysis
+- ✅ Real data integration
+- ✅ Statistical validation
+- ✅ Experiment tracking
+- ✅ Model versioning
+- ✅ Regime insights
+- ✅ Advanced training pipeline
+
+---
+
+## 🏆 Portfolio Highlights
+
+This project demonstrates skills suitable for:
+
+**ML Engineer Roles:**
+- Model selection and evaluation
+- Stability analysis
+- Experiment tracking
+- Model versioning
+- Production-ready pipelines
+
+**Data Scientist Roles:**
+- Statistical validation
+- Feature engineering
+- Unsupervised learning
+- Interpretable insights
+- Research methodology
+
+**Quantitative Analyst Roles:**
+- Financial time-series analysis
+- Regime detection
+- Statistical rigor
+- Real data integration
+- Risk-aware design
+
+**Full-Stack ML Roles:**
+- End-to-end ML pipeline
+- Backend + Frontend
+- API design
+- Professional UI/UX
+- Comprehensive testing
+
+---
+
+## 📚 Additional Documentation
+
+- [PROFESSIONAL_UPGRADES.md](PROFESSIONAL_UPGRADES.md) - Complete v3.0 upgrade details
+- [PROJECT_COMPLETE_SUMMARY.md](PROJECT_COMPLETE_SUMMARY.md) - Comprehensive project summary
+- [PROFESSIONAL_ML_PIPELINE_SUMMARY.md](PROFESSIONAL_ML_PIPELINE_SUMMARY.md) - ML pipeline details
+- [PREMIUM_DARK_THEME_SUMMARY.md](PREMIUM_DARK_THEME_SUMMARY.md) - UI design documentation
+- [DATA_SUMMARY.md](DATA_SUMMARY.md) - Data structure documentation
+
+---
+
+## 🤝 Contributing
+
+This is a portfolio project, but suggestions and feedback are welcome! Feel free to:
+- Open issues for bugs or suggestions
+- Submit pull requests for improvements
+- Star the repository if you find it useful
+
+---
+
+## ⚠️ Disclaimer
+
+**IMPORTANT:** This project is for educational and research purposes only.
+
+- This is NOT financial advice
+- This is NOT a trading system
+- This does NOT predict future prices
+- Past performance does NOT guarantee future results
+- Always consult qualified financial professionals
+- Use at your own risk
+
+The author assumes no responsibility for any financial decisions made based on this software.
+
+---
+
+## 📞 Contact
+
+**Repository:** https://github.com/Prajwal0422/ai-financial-time-series-learning  
+**Author:** Prajwal  
+**Version:** 3.0.0  
+**Status:** ✅ Production Ready - Mid-Level ML Engineering
+
+---
+
+## 📊 Project Statistics
+
+- **Total Files:** 100+
+- **Python Modules:** 32
+- **Lines of Code:** 6,500+
+- **Test Cases:** 18 (100% pass rate)
+- **Documentation Files:** 9
+- **Features Engineered:** 20
+- **ML Features Used:** 7
+- **Data Points:** 36,500 (raw) → 36,010 (processed)
+- **Stocks Analyzed:** 10
+- **Time Period:** 10 years
+- **Model Versions:** Tracked with registry
+- **Experiments:** Logged with full metadata
+
+---
+
+**Last Updated:** February 18, 2026  
+**License:** MIT  
+**Status:** ✅ PRODUCTION READY - MID-LEVEL ML ENGINEERING
+
+---
+
+*Built with ❤️ for learning, research, and professional development*

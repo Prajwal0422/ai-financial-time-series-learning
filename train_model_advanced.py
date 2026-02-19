@@ -45,7 +45,7 @@ def load_all_processed_data():
     dfs = []
     for csv_file in csv_files:
         df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
-        df['Ticker'] = csv_file.stem
+        # Don't add Ticker column - it causes issues with statistical validation
         dfs.append(df)
     
     combined_df = pd.concat(dfs, ignore_index=False)

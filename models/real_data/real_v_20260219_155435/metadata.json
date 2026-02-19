@@ -1,0 +1,24 @@
+{
+  "version": "real_v_20260219_155435",
+  "timestamp": "2026-02-19T15:54:35.788745",
+  "model_type": "KMeans",
+  "n_clusters": 3,
+  "n_features": 7,
+  "features": [
+    "Log_Return",
+    "Volatility_10",
+    "Volatility_30",
+    "Momentum_5",
+    "Price_to_MA10",
+    "Price_to_MA30",
+    "HL_Range"
+  ],
+  "total_samples": 30000,
+  "dataset_count": 10,
+  "metrics": {
+    "silhouette_score": 0.41379968617369645,
+    "davies_bouldin_index": 1.2613286853197998,
+    "inertia": 128166.96427795752
+  },
+  "random_state": 42
+}

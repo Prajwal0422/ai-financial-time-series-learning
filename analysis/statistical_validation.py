@@ -47,7 +47,7 @@ def adf_stationarity_test(series, name='Series'):
         'adf_statistic': float(adf_stat),
         'p_value': float(p_value),
         'critical_values': {k: float(v) for k, v in critical_values.items()},
-        'stationary': is_stationary,
+        'stationary': bool(is_stationary),
         'interpretation': 'Stationary' if is_stationary else 'Non-stationary'
     }
     
@@ -101,7 +101,7 @@ def feature_distribution_summary(df, features):
             summary['normality_test'] = 'Shapiro-Wilk (sampled)'
         
         summary['normality_p_value'] = float(p_value)
-        summary['appears_normal'] = p_value > 0.05
+        summary['appears_normal'] = bool(p_value > 0.05)
         
         summaries[feature] = summary
     
