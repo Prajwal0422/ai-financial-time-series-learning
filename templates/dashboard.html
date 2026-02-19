@@ -409,6 +409,35 @@
         </div>
     </section>
 
+    <!-- Model Information Panel -->
+    <section class="container">
+        <h2 class="section-title gradient-text">Model Information</h2>
+        <div class="glass-card">
+            <div class="kpi-grid">
+                <div class="surface-card metric-card">
+                    <div class="metric-label">Model Version</div>
+                    <div class="metric-value">v{{ model_info.version }}</div>
+                    <div class="metric-subvalue">{{ model_info.model_type }}</div>
+                </div>
+                <div class="surface-card metric-card">
+                    <div class="metric-label">Dataset Size</div>
+                    <div class="metric-value">{{ model_info.dataset_size }}</div>
+                    <div class="metric-subvalue">Training samples</div>
+                </div>
+                <div class="surface-card metric-card">
+                    <div class="metric-label">Silhouette Score</div>
+                    <div class="metric-value">{{ model_info.silhouette_score }}</div>
+                    <div class="metric-subvalue">Cluster quality</div>
+                </div>
+                <div class="surface-card metric-card">
+                    <div class="metric-label">Training Date</div>
+                    <div class="metric-value">{{ model_info.training_date }}</div>
+                    <div class="metric-subvalue">{{ model_info.training_time }}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Visual Analysis -->
     <section class="container" id="analysis">
         <h2 class="section-title gradient-text">Visual Analysis</h2>

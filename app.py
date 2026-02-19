@@ -15,6 +15,9 @@ from config import DATA_DIR, TABLE_ROWS, N_CLUSTERS
 import os
 from functools import lru_cache
 import time
+import json
+from pathlib import Path
+from datetime import datetime
 
 app = Flask(__name__)
 app.register_blueprint(analysis_api, url_prefix="/api")
@@ -47,6 +50,70 @@ def get_cached_data(dataset):
     
     _data_cache[dataset] = (df, current_time)
     return df
+
+def get_model_info():
+    """Get information about the current model version"""
+    try:
+        # Try to load from real_data models first
+        models_dir = Path("models/real_data")
+        versions_file = models_dir / "versions.json"
+        
+        if versions_file.exists():
+            with open(versions_file, 'r') as f:
+                versions_data = json.load(f)
+            
+            current_version = versions_data.get('current_version', 0)
+            
+            if current_version > 0:
+                # Load metadata from current version
+                metadata_file = models_dir / f"v{current_version}" / "metadata.json"
+                
+                if metadata_file.exists():
+                    with open(metadata_file, 'r') as f:
+                        metadata = json.load(f)
+                    
+                    # Parse timestamp
+                    timestamp = datetime.fromisoformat(metadata['timestamp'])
+                    training_date = timestamp.strftime('%Y-%m-%d')
+                    training_time = timestamp.strftime('%H:%M:%S')
+                    
+                    # Get metrics
+                    metrics = metadata.get('metrics', {})
+                    silhouette = metrics.get('silhouette_score', 0)
+                    
+                    # Get training config
+                    config = metadata.get('training_config', {})
+                    dataset_size = config.get('total_samples', 'N/A')
+                    
+                    return {
+                        'version': current_version,
+                        'model_type': metadata.get('model_type', 'KMeans'),
+                        'dataset_size': f"{dataset_size:,}" if isinstance(dataset_size, int) else dataset_size,
+                        'silhouette_score': f"{silhouette:.4f}",
+                        'training_date': training_date,
+                        'training_time': training_time
+                    }
+        
+        # Fallback to default model info
+        return {
+            'version': 'N/A',
+            'model_type': 'KMeans',
+            'dataset_size': 'N/A',
+            'silhouette_score': 'N/A',
+            'training_date': 'N/A',
+            'training_time': 'N/A'
+        }
+    
+    except Exception as e:
+        log_event(f"Error loading model info: {str(e)}")
+        return {
+            'version': 'Error',
+            'model_type': 'N/A',
+            'dataset_size': 'N/A',
+            'silhouette_score': 'N/A',
+            'training_date': 'N/A',
+            'training_time': 'N/A'
+        }
 
 @app.route("/")
 def home():
@@ -102,6 +169,9 @@ def dashboard():
         processing_time = time.time() - start_time
         log_event(f"Dashboard loaded with dataset: {dataset} in {processing_time:.2f}s")
         
+        # Get model information
+        model_info = get_model_info()
+        
         return render_template(
             "dashboard.html",
             summary=summary,
@@ -113,7 +183,8 @@ def dashboard():
             regime_summary=regime_summary,
             table_data=table_data,
             available_datasets=available_datasets,
-            current_dataset=dataset
+            current_dataset=dataset,
+            model_info=model_info
         )
     
     except FileNotFoundError as e:
