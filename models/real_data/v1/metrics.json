@@ -1,0 +1,6 @@
+{
+  "silhouette_score": 0.41379968617369645,
+  "davies_bouldin_index": 1.2613286853197998,
+  "inertia": 128166.96427795754,
+  "training_time": 15.09410810470581
+}

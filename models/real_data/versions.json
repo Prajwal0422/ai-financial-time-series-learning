@@ -1,0 +1,12 @@
+{
+  "current_version": 1,
+  "versions": [
+    {
+      "version": 1,
+      "timestamp": "2026-02-19T16:36:03.792345",
+      "n_clusters": 3,
+      "silhouette_score": 0.41379968617369645,
+      "davies_bouldin_index": 1.2613286853197998
+    }
+  ]
+}

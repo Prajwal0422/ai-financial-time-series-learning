@@ -1,0 +1,103 @@
+{
+  "data_dir": "data/real",
+  "dataset_count": 10,
+  "total_samples": 30490,
+  "features": [
+    "Log_Return",
+    "Volatility_10",
+    "Volatility_30",
+    "Momentum_5",
+    "Price_to_MA10",
+    "Price_to_MA30",
+    "HL_Range"
+  ],
+  "k_range": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "random_state": 42,
+  "n_init": 20,
+  "large_dataset_threshold": 100000,
+  "model_type": "KMeans",
+  "training_time": 75.88031721115112,
+  "data_summary": {
+    "total_rows": 30490,
+    "num_tickers": 10,
+    "tickers": [
+      "AAPL",
+      "AMZN",
+      "GOOG",
+      "JPM",
+      "META",
+      "MSFT",
+      "NVDA",
+      "TSLA",
+      "V",
+      "WMT"
+    ],
+    "date_range": {
+      "start": "2014-01-02T00:00:00-05:00",
+      "end": "2026-02-17T00:00:00-05:00"
+    },
+    "rows_per_ticker": {
+      "AAPL": 3049,
+      "AMZN": 3049,
+      "GOOG": 3049,
+      "JPM": 3049,
+      "META": 3049,
+      "MSFT": 3049,
+      "NVDA": 3049,
+      "TSLA": 3049,
+      "V": 3049,
+      "WMT": 3049
+    }
+  },
+  "feature_statistics": {
+    "n_samples": 30000,
+    "n_features": 7,
+    "features": [
+      "Log_Return",
+      "Volatility_10",
+      "Volatility_30",
+      "Momentum_5",
+      "Price_to_MA10",
+      "Price_to_MA30",
+      "HL_Range"
+    ],
+    "feature_means": {
+      "Log_Return": 0.0009099227482420921,
+      "Volatility_10": 0.018157697544750048,
+      "Volatility_30": 0.018963215934943416,
+      "Momentum_5": 0.48438175067404904,
+      "Price_to_MA10": 1.0043592447114735,
+      "Price_to_MA30": 1.0143622010383702,
+      "HL_Range": 0.023314070322861216
+    },
+    "feature_stds": {
+      "Log_Return": 0.021756989164155215,
+      "Volatility_10": 0.012164234512746121,
+      "Volatility_30": 0.010691235297717112,
+      "Momentum_5": 8.172009864298458,
+      "Price_to_MA10": 0.03522882991084293,
+      "Price_to_MA30": 0.06427112195949185,
+      "HL_Range": 0.015932812451745246
+    },
+    "missing_values": {
+      "Log_Return": 0,
+      "Volatility_10": 0,
+      "Volatility_30": 0,
+      "Momentum_5": 0,
+      "Price_to_MA10": 0,
+      "Price_to_MA30": 0,
+      "HL_Range": 0
+    }
+  },
+  "drift_detection": {
+    "has_drift": false,
+    "message": "First model version"
+  }
+}
