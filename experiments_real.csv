@@ -1,3 +1,2 @@
-timestamp,version,total_samples,dataset_count,K_selected,silhouette,davies_bouldin,inertia
-2026-02-19T15:54:35.796763,real_v_20260219_155435,30000,10,3,0.41379968617369645,1.2613286853197998,128166.96427795752
+version,timestamp,dataset_count,total_samples,K_selected,silhouette_score,davies_bouldin,inertia,training_time,model_type
 1,2026-02-19T16:36:03.802350,10,30490,3,0.41379968617369645,1.2613286853197998,128166.96427795754,75.88031721115112,KMeans
