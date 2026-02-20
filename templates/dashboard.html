@@ -6,8 +6,9 @@
     <title>Dashboard - AI Financial Time-Series Pattern Analysis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-ui.css') }}">
     <style>
         /* Dashboard Specific Styles */
         .header {
@@ -411,28 +412,100 @@
 
     <!-- Model Information Panel -->
     <section class="container">
-        <h2 class="section-title gradient-text">Model Information</h2>
-        <div class="glass-card">
-            <div class="kpi-grid">
-                <div class="surface-card metric-card">
-                    <div class="metric-label">Model Version</div>
-                    <div class="metric-value">v{{ model_info.version }}</div>
-                    <div class="metric-subvalue">{{ model_info.model_type }}</div>
+        <div class="performance-panel">
+            <div class="performance-header">
+                <h2 class="performance-title">
+                    <span class="stat-icon">🤖</span>
+                    Model Performance & Accuracy
+                </h2>
+                <span class="performance-badge">{{ model_info.model_quality }}</span>
+            </div>
+            
+            <div class="stats-grid">
+                <!-- Accuracy Gauge -->
+                <div class="stat-card">
+                    <div class="accuracy-gauge">
+                        <svg class="gauge-circle" viewBox="0 0 200 200">
+                            <defs>
+                                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#0891b2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="gauge-background" cx="100" cy="100" r="85" />
+                            <circle class="gauge-progress" cx="100" cy="100" r="85" 
+                                    data-percentage="{{ model_info.accuracy_percentage }}" />
+                        </svg>
+                        <div class="gauge-text">
+                            <div class="gauge-value">{{ model_info.accuracy_percentage }}%</div>
+                            <div class="gauge-label">Accuracy</div>
+                        </div>
+                    </div>
+                    <div class="stat-label" style="text-align: center; margin-top: 1rem;">Model Clustering Quality</div>
                 </div>
-                <div class="surface-card metric-card">
-                    <div class="metric-label">Dataset Size</div>
-                    <div class="metric-value">{{ model_info.dataset_size }}</div>
-                    <div class="metric-subvalue">Training samples</div>
+                
+                <!-- Model Version -->
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-value">v{{ model_info.version }}</div>
+                    <div class="stat-label">Model Version</div>
+                    <div class="stat-change positive">
+                        <span>✓</span> {{ model_info.model_type }}
+                    </div>
                 </div>
-                <div class="surface-card metric-card">
-                    <div class="metric-label">Silhouette Score</div>
-                    <div class="metric-value">{{ model_info.silhouette_score }}</div>
-                    <div class="metric-subvalue">Cluster quality</div>
+                
+                <!-- Dataset Size -->
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">{{ model_info.dataset_size }}</div>
+                    <div class="stat-label">Training Samples</div>
+                    <div class="stat-change positive">
+                        <span>↑</span> {{ model_info.features_count }} Features
+                    </div>
                 </div>
-                <div class="surface-card metric-card">
-                    <div class="metric-label">Training Date</div>
-                    <div class="metric-value">{{ model_info.training_date }}</div>
-                    <div class="metric-subvalue">{{ model_info.training_time }}</div>
+                
+                <!-- Clusters -->
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">{{ model_info.n_clusters }}</div>
+                    <div class="stat-label">Market Regimes</div>
+                    <div class="stat-change positive">
+                        <span>✓</span> Optimal K
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid" style="margin-top: 2rem;">
+                <div class="metric-item">
+                    <div class="metric-value-large">{{ model_info.silhouette_score }}</div>
+                    <div class="metric-label-small">Silhouette Score</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" data-width="{{ (model_info.silhouette_score|float + 1) * 50 }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-item">
+                    <div class="metric-value-large">{{ model_info.davies_bouldin }}</div>
+                    <div class="metric-label-small">Davies-Bouldin Index</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" data-width="{{ 100 - (model_info.davies_bouldin|float * 20)|min(100) }}%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-item">
+                    <div class="metric-value-large">{{ model_info.training_duration }}</div>
+                    <div class="metric-label-small">Training Time</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" data-width="85%"></div>
+                    </div>
+                </div>
+                
+                <div class="metric-item">
+                    <div class="metric-value-large">{{ model_info.training_date }}</div>
+                    <div class="metric-label-small">Last Trained</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" data-width="100%"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -590,5 +663,6 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/effects.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modern-ui.js') }}"></script>
 </body>
 </html>

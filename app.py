@@ -52,7 +52,7 @@ def get_cached_data(dataset):
     return df
 
 def get_model_info():
-    """Get information about the current model version"""
+    """Get information about the current model version with accuracy metrics"""
     try:
         # Try to load from real_data models first
         models_dir = Path("models/real_data")
@@ -80,18 +80,43 @@ def get_model_info():
                     # Get metrics
                     metrics = metadata.get('metrics', {})
                     silhouette = metrics.get('silhouette_score', 0)
+                    davies_bouldin = metrics.get('davies_bouldin_index', 0)
                     
                     # Get training config
                     config = metadata.get('training_config', {})
                     dataset_size = config.get('total_samples', 'N/A')
+                    training_duration = config.get('training_time', 0)
+                    
+                    # Calculate accuracy score (based on silhouette score)
+                    # Silhouette ranges from -1 to 1, convert to 0-100%
+                    accuracy_percentage = ((silhouette + 1) / 2) * 100
+                    
+                    # Load cluster summary for distribution
+                    cluster_summary_file = models_dir / f"v{current_version}" / "cluster_summary.csv"
+                    cluster_distribution = {}
+                    if cluster_summary_file.exists():
+                        import pandas as pd
+                        cluster_df = pd.read_csv(cluster_summary_file)
+                        for _, row in cluster_df.iterrows():
+                            cluster_distribution[int(row['Cluster'])] = {
+                                'count': int(row['Count']),
+                                'percentage': float(row['Percentage'])
+                            }
                     
                     return {
                         'version': current_version,
                         'model_type': metadata.get('model_type', 'KMeans'),
                         'dataset_size': f"{dataset_size:,}" if isinstance(dataset_size, int) else dataset_size,
                         'silhouette_score': f"{silhouette:.4f}",
+                        'davies_bouldin': f"{davies_bouldin:.4f}",
+                        'accuracy_percentage': f"{accuracy_percentage:.1f}",
                         'training_date': training_date,
-                        'training_time': training_time
+                        'training_time': training_time,
+                        'training_duration': f"{training_duration:.2f}s" if training_duration else 'N/A',
+                        'n_clusters': metadata.get('n_clusters', 3),
+                        'cluster_distribution': cluster_distribution,
+                        'features_count': len(metadata.get('features', [])),
+                        'model_quality': 'Excellent' if silhouette > 0.5 else 'Good' if silhouette > 0.3 else 'Fair'
                     }
         
         # Fallback to default model info
@@ -100,8 +125,15 @@ def get_model_info():
             'model_type': 'KMeans',
             'dataset_size': 'N/A',
             'silhouette_score': 'N/A',
+            'davies_bouldin': 'N/A',
+            'accuracy_percentage': 'N/A',
             'training_date': 'N/A',
-            'training_time': 'N/A'
+            'training_time': 'N/A',
+            'training_duration': 'N/A',
+            'n_clusters': 3,
+            'cluster_distribution': {},
+            'features_count': 7,
+            'model_quality': 'Unknown'
         }
     
     except Exception as e:
@@ -111,8 +143,15 @@ def get_model_info():
             'model_type': 'N/A',
             'dataset_size': 'N/A',
             'silhouette_score': 'N/A',
+            'davies_bouldin': 'N/A',
+            'accuracy_percentage': 'N/A',
             'training_date': 'N/A',
-            'training_time': 'N/A'
+            'training_time': 'N/A',
+            'training_duration': 'N/A',
+            'n_clusters': 3,
+            'cluster_distribution': {},
+            'features_count': 7,
+            'model_quality': 'Error'
         }
 
 @app.route("/")
