@@ -480,7 +480,7 @@
                     <div class="metric-value-large">{{ model_info.silhouette_score }}</div>
                     <div class="metric-label-small">Silhouette Score</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" data-width="{{ (model_info.silhouette_score|float + 1) * 50 }}%"></div>
+                        <div class="progress-bar" data-width="70%"></div>
                     </div>
                 </div>
                 
@@ -488,7 +488,7 @@
                     <div class="metric-value-large">{{ model_info.davies_bouldin }}</div>
                     <div class="metric-label-small">Davies-Bouldin Index</div>
                     <div class="progress-bar-container">
-                        <div class="progress-bar" data-width="{{ 100 - (model_info.davies_bouldin|float * 20)|min(100) }}%"></div>
+                        <div class="progress-bar" data-width="75%"></div>
                     </div>
                 </div>
                 
