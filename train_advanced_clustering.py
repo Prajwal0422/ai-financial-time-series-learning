@@ -279,11 +279,11 @@ def main():
         'version': version_tag,
         'timestamp': datetime.now().isoformat(),
         'algorithm': best_k_result['Algorithm'],
-        'n_clusters': best_k,
-        'n_features': len(feature_columns),
+        'n_clusters': int(best_k),
+        'n_features': int(len(feature_columns)),
         'features': feature_columns,
-        'pca_components': n_components,
-        'total_samples': len(X_clean),
+        'pca_components': int(n_components),
+        'total_samples': int(len(X_clean)),
         'metrics': {
             'silhouette_score': float(best_k_result['Silhouette']),
             'davies_bouldin_index': float(best_k_result['Davies_Bouldin'])
