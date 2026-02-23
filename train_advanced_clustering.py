@@ -274,7 +274,7 @@ def main():
         'version': version_tag,
         'timestamp': datetime.now().isoformat(),
         'algorithm': best_k_result['Algorithm'],
-        'n_clusters': best_k},
+        'n_clusters': best_k,
         'n_features': len(feature_columns),
         'features': feature_columns,
         'pca_components': n_components,
