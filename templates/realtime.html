@@ -241,6 +241,51 @@
     </div>
 
     <script>
+        // INR Currency Formatter
+        function formatINR(value) {
+            try {
+                const num = parseFloat(value);
+                if (isNaN(num)) return value;
+                
+                const isNegative = num < 0;
+                const absNum = Math.abs(num);
+                
+                // Format to 2 decimal places
+                const formatted = absNum.toFixed(2);
+                const parts = formatted.split('.');
+                let integerPart = parts[0];
+                const decimalPart = parts[1] || '00';
+                
+                // Indian numbering system
+                if (integerPart.length <= 3) {
+                    // No formatting needed
+                } else {
+                    const lastThree = integerPart.slice(-3);
+                    const remaining = integerPart.slice(0, -3);
+                    
+                    // Add commas every 2 digits
+                    const groups = [];
+                    let temp = remaining;
+                    while (temp.length > 0) {
+                        if (temp.length > 2) {
+                            groups.unshift(temp.slice(-2));
+                            temp = temp.slice(0, -2);
+                        } else {
+                            groups.unshift(temp);
+                            temp = '';
+                        }
+                    }
+                    
+                    integerPart = groups.join(',') + ',' + lastThree;
+                }
+                
+                const result = `₹${integerPart}.${decimalPart}`;
+                return isNegative ? `-${result}` : result;
+            } catch (e) {
+                return value;
+            }
+        }
+
         let autoRefreshInterval = null;
         let isAutoRefresh = false;
 
@@ -306,7 +351,7 @@
                     <div class="stock-header">
                         <div class="ticker-symbol">${stock.ticker}</div>
                     </div>
-                    <div class="price">$${stock.price.toFixed(2)}</div>
+                    <div class="price">${formatINR(stock.price)}</div>
                     <div class="change ${changeClass}">
                         ${changeSymbol} ${Math.abs(stock.change_percent).toFixed(2)}%
                     </div>

@@ -223,13 +223,14 @@
         position: fixed;
         width: 40px;
         height: 40px;
-        border: 2px solid rgba(6, 182, 212, 0.3);
+        border: 2px solid rgba(6, 182, 212, 0.4);
         border-radius: 50%;
         pointer-events: none;
         z-index: 9999;
         opacity: 0;
         transition: opacity 0.3s ease, transform 0.15s ease, width 0.2s ease, height 0.2s ease;
-        mix-blend-mode: screen;
+        background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
     `;
     document.body.appendChild(cursorFollower);
 
