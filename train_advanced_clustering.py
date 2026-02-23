@@ -37,8 +37,9 @@ EXPERIMENTS_LOG = Path("experiments_advanced.csv")
 
 # Configuration
 RANDOM_STATE = 42
-K_RANGE = range(2, 9)
+K_RANGE = range(2, 6)  # Reduced range for faster training
 REQUIRED_COLUMNS = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume']
+USE_FAST_MODE = True  # Use MiniBatchKMeans for speed
 
 
 
@@ -188,37 +189,41 @@ def main():
     X_pca, pca_model, n_components = apply_pca_denoising(X_clean, variance_threshold=0.95)
     print("=" * 80)
     
-    # PHASE 5: Algorithm Comparison
+    # PHASE 5: Algorithm Comparison (Fast Mode)
     print("\n" + "=" * 80)
-    print("PHASE 5: ALGORITHM COMPARISON")
+    print("PHASE 5: ALGORITHM COMPARISON (FAST MODE)")
     print("=" * 80)
     
-    # Test with K=3 first
-    best_algo, all_algos = compare_algorithms(X_pca, n_clusters=3, random_state=RANDOM_STATE)
-    print("=" * 80)
-    
-    # PHASE 6: K Optimization
-    print("\n" + "=" * 80)
-    print("PHASE 6: K OPTIMIZATION")
-    print("=" * 80)
-    
-    print(f"\nTesting K values: {list(K_RANGE)}")
-    print(f"Using best algorithm: {best_algo['algorithm']}")
+    # Use MiniBatchKMeans for speed with large datasets
+    from sklearn.cluster import MiniBatchKMeans
+    print(f"\nUsing MiniBatchKMeans for efficiency...")
+    print(f"Testing K values: {list(K_RANGE)}")
     print(f"\n{'K':>3} | {'Silhouette':>11} | {'Davies-Bouldin':>15}")
     print("─" * 45)
     
     k_results = []
     for k in K_RANGE:
-        best_k_algo, _ = compare_algorithms(X_pca, n_clusters=k, random_state=RANDOM_STATE)
+        model = MiniBatchKMeans(
+            n_clusters=k,
+            random_state=RANDOM_STATE,
+            batch_size=2048,
+            n_init=5,
+            max_iter=100
+        )
+        labels = model.fit_predict(X_pca)
+        
+        sil = silhouette_score(X_pca, labels)
+        db = davies_bouldin_score(X_pca, labels)
+        
         k_results.append({
             'K': k,
-            'Silhouette': best_k_algo['silhouette'],
-            'Davies_Bouldin': best_k_algo['davies_bouldin'],
-            'Algorithm': best_k_algo['algorithm'],
-            'model': best_k_algo['model'],
-            'labels': best_k_algo['labels']
+            'Silhouette': sil,
+            'Davies_Bouldin': db,
+            'Algorithm': 'MiniBatchKMeans',
+            'model': model,
+            'labels': labels
         })
-        print(f"{k:3d} | {best_k_algo['silhouette']:11.4f} | {best_k_algo['davies_bouldin']:15.4f}")
+        print(f"{k:3d} | {sil:11.4f} | {db:15.4f}")
     
     # Select best K
     best_k_result = max(k_results, key=lambda x: x['Silhouette'])
@@ -230,9 +235,9 @@ def main():
     print("=" * 80)
 
     
-    # PHASE 7: Save artifacts
+    # PHASE 6: Save artifacts
     print("\n" + "=" * 80)
-    print("PHASE 7: SAVING ARTIFACTS")
+    print("PHASE 6: SAVING ARTIFACTS")
     print("=" * 80)
     
     # Create version directory
