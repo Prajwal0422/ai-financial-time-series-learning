@@ -10,6 +10,67 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
     <style>
         /* Landing Page Specific Styles */
+        
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15), transparent);
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: 10%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(50px, -50px) scale(1.1);
+                opacity: 0.6;
+            }
+        }
+        
         .header {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -18,6 +79,12 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .header.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         
         .header-content {
@@ -55,6 +122,10 @@
             padding: var(--space-2xl) 0;
             text-align: center;
             position: relative;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .hero-title {
@@ -62,6 +133,7 @@
             font-weight: 700;
             margin-bottom: var(--space-md);
             line-height: 1.2;
+            animation: fadeInUp 0.8s ease-out;
         }
         
         .hero-subtitle {
@@ -71,6 +143,7 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
         }
         
         .hero-description {
@@ -79,6 +152,31 @@
             max-width: 700px;
             margin: 0 auto var(--space-xl);
             line-height: 1.8;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .btn-primary {
+            animation: fadeInUp 0.8s ease-out 0.6s both, pulse 2s ease-in-out 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 15px rgba(6, 182, 212, 0);
+            }
         }
         
         .section {
@@ -111,6 +209,19 @@
         
         .feature-card {
             padding: var(--space-xl);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.2);
         }
         
         .feature-icon {
@@ -126,6 +237,12 @@
             font-weight: 700;
             margin-bottom: var(--space-md);
             box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 8px 24px rgba(6, 182, 212, 0.5);
         }
         
         .feature-title {
@@ -151,6 +268,11 @@
             flex: 1;
             text-align: center;
             padding: var(--space-lg);
+            transition: all 0.3s ease;
+        }
+        
+        .process-step:hover {
+            transform: scale(1.05);
         }
         
         .process-number {
@@ -165,11 +287,29 @@
             font-weight: 700;
             margin: 0 auto var(--space-sm);
             box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .process-step:hover .process-number {
+            transform: scale(1.2);
+            box-shadow: 0 8px 24px rgba(6, 182, 212, 0.6);
         }
         
         .process-arrow {
             font-size: 2rem;
             color: var(--accent-primary);
+            animation: arrowPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes arrowPulse {
+            0%, 100% {
+                transform: translateX(0);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateX(10px);
+                opacity: 1;
+            }
         }
         
         .info-panel {
@@ -230,6 +370,15 @@
     </style>
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
+    
     <!-- Header Navigation -->
     <header class="header">
         <div class="container">
@@ -476,5 +625,39 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/effects.js') }}"></script>
+    <script>
+        // Scroll animations for feature cards
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all feature cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => observer.observe(card));
+            
+            // Header scroll effect
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
