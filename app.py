@@ -23,6 +23,78 @@ app = Flask(__name__)
 app.register_blueprint(analysis_api, url_prefix="/api")
 app.register_blueprint(realtime_bp)  # NEW: Register real-time blueprint
 
+# INR Currency Formatter
+def format_inr(value):
+    """
+    Format number to Indian Rupee (INR) with Indian numbering system.
+    
+    Args:
+        value: Number to format
+        
+    Returns:
+        Formatted string with ₹ symbol and Indian comma placement
+        
+    Examples:
+        1000 → ₹1,000
+        100000 → ₹1,00,000
+        10000000 → ₹1,00,00,000
+    """
+    try:
+        # Convert to float
+        num = float(value)
+        
+        # Handle negative numbers
+        is_negative = num < 0
+        num = abs(num)
+        
+        # Format to 2 decimal places
+        formatted = f"{num:.2f}"
+        
+        # Split into integer and decimal parts
+        parts = formatted.split('.')
+        integer_part = parts[0]
+        decimal_part = parts[1] if len(parts) > 1 else "00"
+        
+        # Indian numbering system
+        # Last 3 digits
+        if len(integer_part) <= 3:
+            result = integer_part
+        else:
+            # Get last 3 digits
+            last_three = integer_part[-3:]
+            remaining = integer_part[:-3]
+            
+            # Add commas every 2 digits for remaining
+            groups = []
+            while remaining:
+                if len(remaining) > 2:
+                    groups.append(remaining[-2:])
+                    remaining = remaining[:-2]
+                else:
+                    groups.append(remaining)
+                    remaining = ""
+            
+            # Reverse and join
+            groups.reverse()
+            result = ','.join(groups) + ',' + last_three
+        
+        # Add decimal part
+        result = f"{result}.{decimal_part}"
+        
+        # Add currency symbol
+        result = f"₹{result}"
+        
+        # Add negative sign if needed
+        if is_negative:
+            result = f"-{result}"
+        
+        return result
+    except (ValueError, TypeError):
+        return str(value)
+
+# Register as Jinja filter
+app.jinja_env.filters['format_inr'] = format_inr
+
 # Performance optimization: Cache dataset lists
 @lru_cache(maxsize=32)
 def get_cached_datasets():
