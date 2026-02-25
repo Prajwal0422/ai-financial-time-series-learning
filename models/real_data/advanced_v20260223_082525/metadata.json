@@ -1,0 +1,23 @@
+{
+  "version": "advanced_v20260223_082525",
+  "timestamp": "2026-02-23T08:25:25.482795",
+  "algorithm": "MiniBatchKMeans",
+  "n_clusters": 2,
+  "n_features": 14,
+  "features": [
+    "Log_Return",
+    "Volatility_10",
+    "Volatility_30",
+    "Momentum_5",
+    "Price_to_MA10",
+    "Price_to_MA30",
+    "HL_Range",
+    "Volatility_Ratio",
+    "Rolling_Skewness",
+    "Rolling_Kurtosis",
+    "ATR_Normalized",
+    "Price_Zscore",
+    "Volume_Change_Norm",
+    "Rolling_Sharpe"
+  ],
+  "pca_components": 

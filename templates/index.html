@@ -119,40 +119,194 @@
         }
         
         .hero {
-            padding: var(--space-2xl) 0;
+            padding: 0;
             text-align: center;
             position: relative;
-            min-height: 80vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
         
+        /* Particle System */
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(6, 182, 212, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+        }
+        
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        /* Hero Content Container */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            padding: var(--space-2xl);
+        }
+        
+        /* Glowing Orb Background */
+        .hero-orb {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: orbPulse 4s ease-in-out infinite;
+            z-index: 2;
+            filter: blur(60px);
+        }
+        
+        @keyframes orbPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+        
+        /* Title with Split Text Animation */
         .hero-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: var(--space-md);
-            line-height: 1.2;
-            animation: fadeInUp 0.8s ease-out;
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: var(--space-lg);
+            line-height: 1.1;
+            position: relative;
+            overflow: hidden;
         }
         
+        .hero-title-word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100px) rotateX(-90deg);
+            animation: wordReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        .hero-title-word:nth-child(1) { animation-delay: 0.1s; }
+        .hero-title-word:nth-child(2) { animation-delay: 0.2s; }
+        .hero-title-word:nth-child(3) { animation-delay: 0.3s; }
+        .hero-title-word:nth-child(4) { animation-delay: 0.4s; }
+        .hero-title-word:nth-child(5) { animation-delay: 0.5s; }
+        
+        @keyframes wordReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+        
+        /* Gradient Text Effect */
+        .gradient-text-animated {
+            background: linear-gradient(90deg, 
+                #06b6d4 0%, 
+                #3b82f6 25%, 
+                #8b5cf6 50%, 
+                #3b82f6 75%, 
+                #06b6d4 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s linear infinite;
+        }
+        
+        @keyframes gradientShift {
+            to {
+                background-position: 200% center;
+            }
+        }
+        
+        /* Subtitle with Typewriter Effect */
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             color: var(--text-secondary);
-            margin-bottom: var(--space-lg);
-            max-width: 800px;
+            margin-bottom: var(--space-xl);
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            opacity: 0;
+            animation: fadeInScale 0.8s ease-out 0.8s forwards;
+            line-height: 1.6;
         }
         
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Description with Slide In */
         .hero-description {
             font-size: 1.125rem;
             color: var(--text-tertiary);
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto var(--space-xl);
             line-height: 1.8;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
+            opacity: 0;
+            animation: slideInFromLeft 0.8s ease-out 1.2s forwards;
+        }
+        
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* CTA Button Group */
+        .hero-cta-group {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 1.6s forwards;
         }
         
         @keyframes fadeInUp {
@@ -166,16 +320,139 @@
             }
         }
         
-        .btn-primary {
-            animation: fadeInUp 0.8s ease-out 0.6s both, pulse 2s ease-in-out 2s infinite;
+        /* Enhanced Primary Button */
+        .btn-hero-primary {
+            position: relative;
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4);
         }
         
-        @keyframes pulse {
+        .btn-hero-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-hero-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(6, 182, 212, 0.6);
+        }
+        
+        /* Secondary Button */
+        .btn-hero-secondary {
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            background: transparent;
+            color: var(--accent-primary);
+            border: 2px solid var(--accent-primary);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hero-secondary:hover {
+            background: rgba(6, 182, 212, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+        }
+        
+        /* Stats Bar */
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2xl);
+            margin-top: var(--space-2xl);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 2s forwards;
+        }
+        
+        .hero-stat {
+            text-align: center;
+        }
+        
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .hero-stat-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 2.5s forwards, bounce 2s ease-in-out 3.5s infinite;
+            z-index: 10;
+        }
+        
+        .scroll-indicator-icon {
+            width: 30px;
+            height: 50px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 20px;
+            position: relative;
+        }
+        
+        .scroll-indicator-icon::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+            animation: scrollDot 2s ease-in-out infinite;
+        }
+        
+        @keyframes scrollDot {
             0%, 100% {
-                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
+                top: 8px;
+                opacity: 1;
             }
             50% {
-                box-shadow: 0 0 0 15px rgba(6, 182, 212, 0);
+                top: 30px;
+                opacity: 0;
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
             }
         }
         
@@ -420,18 +697,60 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <h1 class="hero-title gradient-text fade-in">AI Financial Time-Series Pattern Analysis</h1>
-            <p class="hero-subtitle fade-in animate-delay-1">
+        <!-- Particle System -->
+        <div class="hero-particles" id="heroParticles"></div>
+        
+        <!-- Glowing Orb -->
+        <div class="hero-orb"></div>
+        
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="hero-title-word gradient-text-animated">AI</span>
+                <span class="hero-title-word gradient-text-animated">Financial</span>
+                <span class="hero-title-word gradient-text-animated">Time-Series</span>
+                <br>
+                <span class="hero-title-word gradient-text-animated">Pattern</span>
+                <span class="hero-title-word gradient-text-animated">Analysis</span>
+            </h1>
+            
+            <p class="hero-subtitle">
                 Interpretable machine learning for understanding market behavior through statistical pattern recognition
             </p>
-            <p class="hero-description fade-in animate-delay-2">
+            
+            <p class="hero-description">
                 This platform applies unsupervised learning and statistical methods to identify behavioral regimes in financial time-series data. 
                 Built for data scientists and researchers who prioritize interpretability over prediction.
             </p>
-            <div class="fade-in animate-delay-3">
-                <a href="/dashboard" class="btn btn-primary">Open Dashboard</a>
+            
+            <div class="hero-cta-group">
+                <a href="/dashboard" class="btn-hero-primary">
+                    <span>Open Dashboard</span>
+                </a>
+                <a href="#features" class="btn-hero-secondary">
+                    <span>Learn More</span>
+                </a>
             </div>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value" data-target="10000">0</span>
+                    <span class="hero-stat-label">Data Points</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" data-target="5">0</span>
+                    <span class="hero-stat-label">ML Models</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" data-target="99">0</span>
+                    <span class="hero-stat-label">Accuracy %</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-indicator-icon"></div>
         </div>
     </section>
 
@@ -626,6 +945,52 @@
 
     <script src="{{ url_for('static', filename='js/effects.js') }}"></script>
     <script>
+        // Create Particle System
+        function createParticles() {
+            const container = document.getElementById('heroParticles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random starting position
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 100;
+                
+                // Random movement
+                const tx = (Math.random() - 0.5) * 200;
+                const ty = (Math.random() - 0.5) * 200;
+                
+                particle.style.left = startX + '%';
+                particle.style.top = startY + '%';
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Animate Counter Numbers
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 16);
+        }
+        
         // Scroll animations for feature cards
         const observerOptions = {
             threshold: 0.1,
@@ -643,8 +1008,17 @@
             });
         }, observerOptions);
         
-        // Observe all feature cards
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
+            // Create particles
+            createParticles();
+            
+            // Animate counters after delay
+            setTimeout(() => {
+                document.querySelectorAll('.hero-stat-value').forEach(animateCounter);
+            }, 2000);
+            
+            // Observe all feature cards
             const featureCards = document.querySelectorAll('.feature-card');
             featureCards.forEach(card => observer.observe(card));
             
@@ -656,6 +1030,20 @@
                 } else {
                     header.classList.remove('scrolled');
                 }
+            });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
         });
     </script>
