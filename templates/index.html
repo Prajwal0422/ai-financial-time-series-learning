@@ -934,6 +934,149 @@
             line-height: 1.7;
         }
         
+        /* Philosophy Section Redesign */
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-xl);
+            margin-top: var(--space-2xl);
+        }
+        
+        .philosophy-card {
+            padding: var(--space-xl);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+        
+        .philosophy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .philosophy-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .philosophy-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(6, 182, 212, 0.3);
+            border-color: rgba(6, 182, 212, 0.5);
+        }
+        
+        .philosophy-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.2));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .philosophy-icon-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+        
+        .philosophy-card:hover .philosophy-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.4);
+        }
+        
+        .philosophy-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px currentColor);
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .philosophy-content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .philosophy-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .philosophy-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        .philosophy-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: var(--space-sm);
+        }
+        
+        .tag {
+            padding: 0.5rem 1rem;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .tag:hover {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        
         .tech-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1239,36 +1382,71 @@
 
     <!-- Design Philosophy -->
     <section class="section" id="methodology">
-        <div class="container" style="max-width: 960px;">
+        <div class="container">
             <div class="section-header">
                 <h2 class="section-title gradient-text">Design Philosophy</h2>
-            </div>
-
-            <div class="glass-card info-panel">
-                <h3>Interpretability Over Prediction</h3>
-                <p>
-                    This platform does not make trading recommendations or predict future prices. Instead, it focuses on 
-                    understanding historical market behavior through statistical analysis. Every insight is explainable, 
-                    every method is transparent, and every limitation is acknowledged.
+                <p class="section-subtitle">
+                    Our core principles that drive innovation and transparency
                 </p>
             </div>
 
-            <div class="glass-card info-panel">
-                <h3>Research-Grade Methodology</h3>
-                <p>
-                    Built using established statistical methods and machine learning techniques from academic research. 
-                    Logarithmic returns for time-additivity, rolling windows for local statistics, and k-means clustering 
-                    for regime identification. No proprietary algorithms, no hidden complexity.
-                </p>
-            </div>
+            <div class="philosophy-grid">
+                <div class="philosophy-card glass-card">
+                    <div class="philosophy-icon-wrapper">
+                        <div class="philosophy-icon">🎯</div>
+                    </div>
+                    <div class="philosophy-content">
+                        <h3 class="philosophy-title">Interpretability Over Prediction</h3>
+                        <p class="philosophy-description">
+                            This platform does not make trading recommendations or predict future prices. Instead, it focuses on 
+                            understanding historical market behavior through statistical analysis. Every insight is explainable, 
+                            every method is transparent, and every limitation is acknowledged.
+                        </p>
+                        <div class="philosophy-tags">
+                            <span class="tag">Transparent</span>
+                            <span class="tag">Explainable</span>
+                            <span class="tag">Honest</span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="glass-card info-panel">
-                <h3>Educational Purpose</h3>
-                <p>
-                    Designed as a learning tool for understanding how data science applies to financial analysis. 
-                    Demonstrates feature engineering, unsupervised learning, and statistical interpretation in a 
-                    real-world context. Not intended for production trading systems.
-                </p>
+                <div class="philosophy-card glass-card">
+                    <div class="philosophy-icon-wrapper">
+                        <div class="philosophy-icon">🔬</div>
+                    </div>
+                    <div class="philosophy-content">
+                        <h3 class="philosophy-title">Research-Grade Methodology</h3>
+                        <p class="philosophy-description">
+                            Built using established statistical methods and machine learning techniques from academic research. 
+                            Logarithmic returns for time-additivity, rolling windows for local statistics, and k-means clustering 
+                            for regime identification. No proprietary algorithms, no hidden complexity.
+                        </p>
+                        <div class="philosophy-tags">
+                            <span class="tag">Academic</span>
+                            <span class="tag">Proven</span>
+                            <span class="tag">Open</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="philosophy-card glass-card">
+                    <div class="philosophy-icon-wrapper">
+                        <div class="philosophy-icon">📚</div>
+                    </div>
+                    <div class="philosophy-content">
+                        <h3 class="philosophy-title">Educational Purpose</h3>
+                        <p class="philosophy-description">
+                            Designed as a learning tool for understanding how data science applies to financial analysis. 
+                            Demonstrates feature engineering, unsupervised learning, and statistical interpretation in a 
+                            real-world context. Not intended for production trading systems.
+                        </p>
+                        <div class="philosophy-tags">
+                            <span class="tag">Learning</span>
+                            <span class="tag">Practical</span>
+                            <span class="tag">Real-World</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
