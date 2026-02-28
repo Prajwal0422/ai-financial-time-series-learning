@@ -44,12 +44,12 @@
 :root {
     /* Darker Color Palette with Better Contrast */
     --bg-primary: #000000;
-    --bg-secondary: #0a0e1a;
-    --bg-tertiary: #111827;
+    --bg-secondary: #050810;
+    --bg-tertiary: #0a0f1a;
     
-    --surface-dark: #0d1117;
-    --surface-medium: #161b22;
-    --surface-light: #1f2937;
+    --surface-dark: #060a12;
+    --surface-medium: #0d1117;
+    --surface-light: #111827;
     
     /* Improved Text Contrast (WCAG AA Compliant) */
     --text-primary: #f8fafc;      /* Brighter for better readability */
