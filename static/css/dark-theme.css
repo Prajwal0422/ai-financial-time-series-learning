@@ -72,9 +72,9 @@
     --glass-border: rgba(75, 85, 99, 0.15);
     
     /* Shadows & Glows - Deeper */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.7);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.8);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.8);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.85);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.9);
     --shadow-glow: 0 0 20px var(--accent-glow);
     
     /* Spacing */
