@@ -68,8 +68,8 @@
     --danger: #ef4444;
     
     /* Glassmorphism - Darker */
-    --glass-bg: rgba(10, 14, 26, 0.8);
-    --glass-border: rgba(75, 85, 99, 0.2);
+    --glass-bg: rgba(5, 8, 16, 0.85);
+    --glass-border: rgba(75, 85, 99, 0.15);
     
     /* Shadows & Glows - Deeper */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
