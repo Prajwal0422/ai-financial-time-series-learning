@@ -12,6 +12,9 @@ from api.realtime_api import realtime_bp  # NEW: Real-time API
 from analysis.async_tasks import run_async
 from analysis.logger import log_event, log_experiment
 from config import DATA_DIR, TABLE_ROWS, N_CLUSTERS
+from dataset_manager import DatasetManager
+from auto_trainer import AutoTrainer
+from werkzeug.utils import secure_filename
 import os
 from functools import lru_cache
 import time
@@ -22,6 +25,10 @@ from datetime import datetime
 app = Flask(__name__)
 app.register_blueprint(analysis_api, url_prefix="/api")
 app.register_blueprint(realtime_bp)  # NEW: Register real-time blueprint
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
+
+# Initialize dataset manager
+dataset_manager = DatasetManager()
 
 # INR Currency Formatter
 def format_inr(value):
@@ -229,6 +236,113 @@ def get_model_info():
 @app.route("/")
 def home():
     return render_template("index.html")
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload_dataset():
+    """Handle dataset upload and automated training"""
+    if request.method == "GET":
+        return render_template("upload.html")
+    
+    try:
+        # Validate request
+        if 'file' not in request.files:
+            return jsonify({"success": False, "error": "No file provided"}), 400
+        
+        if 'dataset_name' not in request.form:
+            return jsonify({"success": False, "error": "No dataset name provided"}), 400
+        
+        file = request.files['file']
+        dataset_name = request.form['dataset_name'].strip()
+        
+        # Validate file
+        if file.filename == '':
+            return jsonify({"success": False, "error": "No file selected"}), 400
+        
+        if not dataset_manager.allowed_file(file.filename):
+            return jsonify({
+                "success": False, 
+                "error": "Invalid file type. Allowed: CSV, XLSX, PDF"
+            }), 400
+        
+        # Validate dataset name
+        is_valid, message = dataset_manager.validate_dataset_name(dataset_name)
+        if not is_valid:
+            return jsonify({"success": False, "error": message}), 400
+        
+        # Secure filename
+        original_filename = secure_filename(file.filename)
+        file_extension = original_filename.rsplit('.', 1)[1].lower()
+        
+        # Create dataset structure
+        dataset_path = dataset_manager.create_dataset_structure(dataset_name)
+        
+        # Save uploaded file temporarily
+        temp_file_path = dataset_path / 'raw' / original_filename
+        file.save(str(temp_file_path))
+        
+        log_event(f"File uploaded: {original_filename} for dataset: {dataset_name}")
+        
+        # Parse file
+        df, parse_error = dataset_manager.parse_file(str(temp_file_path), file_extension)
+        if parse_error:
+            return jsonify({"success": False, "error": parse_error}), 400
+        
+        # Validate DataFrame
+        is_valid, validation_message = dataset_manager.validate_dataframe(df)
+        if not is_valid:
+            return jsonify({"success": False, "error": validation_message}), 400
+        
+        # Save raw data
+        dataset_manager.save_raw_data(df, dataset_name, original_filename)
+        
+        # Register dataset (initial status)
+        dataset_manager.register_dataset(dataset_name, {
+            'sample_count': len(df),
+            'status': 'processing'
+        })
+        
+        log_event(f"Dataset registered: {dataset_name}")
+        
+        # Run automated training pipeline
+        trainer = AutoTrainer(dataset_name)
+        result = trainer.run_full_pipeline()
+        
+        if not result['success']:
+            dataset_manager.update_dataset_status(dataset_name, 'failed', {
+                'error': result.get('error', 'Unknown error')
+            })
+            return jsonify({
+                "success": False, 
+                "error": f"Training failed: {result.get('error', 'Unknown error')}"
+            }), 500
+        
+        # Update registry with training results
+        dataset_manager.update_dataset_status(dataset_name, 'completed', {
+            'sample_count': result['sample_count'],
+            'cluster_count': result['cluster_count'],
+            'silhouette_score': result['silhouette_score'],
+            'model_version': result['model_version']
+        })
+        
+        log_event(f"Training completed for {dataset_name}: {result['cluster_count']} clusters, "
+                 f"silhouette={result['silhouette_score']:.4f}")
+        
+        return jsonify({
+            "success": True,
+            "message": "Dataset uploaded and model trained successfully",
+            "dataset_name": dataset_name,
+            "sample_count": result['sample_count'],
+            "cluster_count": result['cluster_count'],
+            "silhouette_score": round(result['silhouette_score'], 4),
+            "model_version": result['model_version']
+        })
+    
+    except Exception as e:
+        log_event(f"Upload error: {str(e)}")
+        return jsonify({
+            "success": False, 
+            "error": f"Server error: {str(e)}"
+        }), 500
 
 @app.route("/dashboard")
 def dashboard():
